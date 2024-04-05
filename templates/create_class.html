@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Class</title>
+</head>
+<body>
+    {% if user_belongs_to_staff %}
+        <p>Welcome, Staff Member! You can create a class.</p>
+    {% elif user_belongs_to_hod %}
+        <p>Welcome, Head of Department! You can create a class.</p>
+    {% else %}
+        <p>Sorry, you are not authorized to create a class.</p>
+    {% endif %}
+
+    {% if user_belongs_to_staff or user_belongs_to_hod %}
+        <h2>Create a New Class</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create Class</button>
+        </form>
+    {% endif %}
+</body>
+</html>

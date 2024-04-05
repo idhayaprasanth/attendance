@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="gobus-favicon-black.png" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="562540532923-na4fgo0djodivsaldj86o6qeo5gilhnb.apps.googleusercontent.com.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <title>Signup</title>
+</head>
+<body>
+    <div class="container">
+        <img src="{% static 'images/logo1.png' %}" alt="Logo" class="logo">
+        <h4>New Registeration</h4>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="User-Name" name="username" required style="margin-left: 4px;">
+            <span>
+                <input type="password" placeholder="Password" name="password1" id="password" required>
+                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password')"></i>
+            </span>
+            <span>
+                <input type="password" placeholder="Confirmation Password" name="password2" id="password2" required>
+                <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password2')"></i>
+            </span>
+            <span id="password-error" class="error-message"></span>
+            <button type="submit">Sign up</button>
+        </form>
+       
+    
+   
+        <script>
+            function togglePassword(inputId) {
+                const passwordInput = document.getElementById(inputId);
+                const icon = passwordInput.nextElementSibling; // Get the icon next to the input
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    icon.classList.remove("bi-eye-slash");
+                    icon.classList.add("bi-eye");
+                } else {
+                    passwordInput.type = "password";
+                    icon.classList.remove("bi-eye");
+                    icon.classList.add("bi-eye-slash");
+                }
+            }
+        
+            function checkPasswords() {
+                var password = document.getElementById('password').value;
+                var confirmPassword = document.getElementById('password2').value; // Corrected from 'password2'
+                var passwordError = document.getElementById('password-error');
+        
+                if (password !== confirmPassword) { // Corrected variable name
+                    passwordError.textContent = 'Passwords do not match';
+                    passwordError.style.color = 'red';
+                    passwordError.style.fontSize = '15px';
+                    passwordError.style.marginBottom = '10px';
+                    return false; // Prevent form submission
+                } else {
+                    passwordError.textContent = '';
+                    return true; // Allow form submission
+                }
+            }
+        </script>
+</body>
+</html>

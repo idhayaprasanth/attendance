@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: rgb(152, 208, 243);
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
+    {% if student %}
+    {% for student in student %}
+    <table>
+        
+    <thead>
+        <h4 style="text-align: center;">Student Details</h4>
+        <tr>
+            <th>Student</th>
+            <th>Reg No</th>
+            <th>classroom</th>
+            <th>Mobile</th>
+            <th>Gender</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if student.gender == "female" %}
+        <tr>
+            <td>{{student.name}}</td>
+            <td>{{student.reg}}</td>
+            <td>{{student.classroom}}</td>
+            <td>{{student.mobile}}</td>
+            <td>{{student.gender}}</td>
+            </tr>
+            {% elif student.gender == "male" %}
+        <tr>
+            <td>{{student.name}}</td>
+            <td>{{student.reg}}</td>
+            <td>{{student.classroom}}</td>
+            <td>{{student.mobile}}</td>
+            <td>{{student.gender}}</td>
+            </tr>
+            </tbody>
+            {% endif %}
+        </table>
+            
+    
+    {% endfor %}
+    {% else %}
+    <p>No student found.</p>
+    {% endif %}
+    
+</body>
+</html>

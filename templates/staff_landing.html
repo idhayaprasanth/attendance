@@ -1,0 +1,450 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/staff_landing.css' %}">
+    <style>
+        body {
+   
+}
+
+        /* CSS for card styling */
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: auto;
+            padding-top: 10px ;
+            margin-bottom: 6px;
+             /* Ensure content wraps to new line when there's not enough space */
+            /* Remove default margin */
+        }
+        .content a {
+            margin: 0 15px 15px 0; /* Add space between cards */
+            text-decoration: none;
+            padding: 6px 15px; /* Increase padding */
+            border-radius: 6px;
+            font-size: small;
+            font-weight: bold;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+            display: inline-block;
+            background-color: white;
+            color:black;
+        }
+        .space {
+            margin-left: 30px;
+            margin-top: 20px; 
+           
+            /* Add margin top for spacing */
+        }
+        #space{
+            background-color: whitesmoke;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
+            border-radius: 6px;
+
+        }
+        /* Style for the form container */
+.attendance-form {
+    max-width: 400px; /* Adjust as needed */
+    margin: 0 auto;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 100px;/* Ensure content wraps to new line when there's not enough space */
+
+}
+.attendance{
+    display: flex;
+    border-bottom: 2px groove whitesmoke; 
+
+}
+.nav {
+    height: 50px;
+    display: flex;
+    position: relative;
+    top: 0px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-bottom: 40px;/* Example background color */
+}
+
+/* Style for the select dropdown */
+.classroom-select {
+    width: 160px;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* Style for the date input */
+.date-input {
+    width: 150px;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Style for the submit button */
+.submit-button {
+    width: 100px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: mediumseagreen;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.nav a{
+    width: 40px;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    
+}
+.space h4{
+    color: navy;
+    margin-bottom: 30px;
+}
+
+/* Hover effect for the submit button */
+.submit-button:hover {
+    background-color: #0056b3;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-image: radial-gradient(circle at center center, rgba(217, 217, 217,0.05) 0%, rgba(217, 217, 217,0.05) 15%,rgba(197, 197, 197,0.05) 15%, rgba(197, 197, 197,0.05) 34%,rgba(178, 178, 178,0.05) 34%, rgba(178, 178, 178,0.05) 51%,rgba(237, 237, 237,0.05) 51%, rgba(237, 237, 237,0.05) 75%,rgba(138, 138, 138,0.05) 75%, rgba(138, 138, 138,0.05) 89%,rgba(158, 158, 158,0.05) 89%, rgba(158, 158, 158,0.05) 100%),radial-gradient(circle at center center, rgb(255,255,255) 0%, rgb(255,255,255) 6%,rgb(255,255,255) 6%, rgb(255,255,255) 12%,rgb(255,255,255) 12%, rgb(255,255,255) 31%,rgb(255,255,255) 31%, rgb(255,255,255) 92%,rgb(255,255,255) 92%, rgb(255,255,255) 97%,rgb(255,255,255) 97%, rgb(255,255,255) 100%); background-size: 42px 42px;
+    margin: 10%  auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.card {
+    
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-bottom: 50px;
+    border-radius: 6px;
+
+}
+
+button{
+    width: 110px;
+    background-color: mediumseagreen;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+   font-size: xx-small;
+    margin:4px;
+    font-weight: bold;
+}
+
+.content1 img {
+    margin-bottom: 8px;
+    width: 60px; /* Set a fixed width */
+    height: 60px; /* Set a fixed height */
+}
+.leave_card{
+    width: 400px;
+    display: flex;
+    padding:20px;
+    flex-direction: column;
+    border: 2px groove gainsboro;
+    border-radius: 6px;
+    background-color: white;
+    margin-bottom: 50px;
+    
+}
+
+.line{
+    display: flex;
+    gap: 50px;
+    align-items: center;
+
+}
+p,h4,h6,h5{
+    margin-bottom: 2px;
+}
+.badge {
+            background-color: red;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 50%;
+            font-size: smaller;
+            font-weight:bold ;
+            transform: translate(260%, 0%);
+}
+        /* Responsive Styling */
+        @media only screen and (max-width: 600px) {
+            .space {
+                margin-left: 10px; /* Remove left margin on small screens */
+            }
+            .nav img{
+                width: 150px;
+            }
+            .attendance{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px groove whitesmoke; 
+
+}
+.content1{
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+     
+        }
+    </style>
+    <title>Staff Landing Page</title>
+</head>
+<body>
+    <!-- User information and logout link -->
+    <div class="nav">
+        <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
+        <a class="button" href="logout/">logout</a>
+    </div>
+    <div class="space">
+        <h4>Attendance:</h4>
+    <div id="space">
+        {% if class %}
+            <!-- Display classrooms for 1st year -->
+            
+            <div class="content">
+                {% for cls in class %}
+                    {% if cls.year == "1st" %}  <!-- Filter by year -->
+                        <a href="update/{{ cls.id }}/2024-03-01"> {{ cls.year }} - {{ cls.section }} </a>
+                    {% endif %}
+                {% endfor %}
+           
+                {% for cls in class %}
+                    {% if cls.year == "2nd" %}  <!-- Filter by year -->
+                        <a href="update/{{ cls.id }}/2024-03-01"> {{ cls.year }} - {{ cls.section }} </a>
+                    {% endif %}
+                {% endfor %}
+            
+            <!-- Display classrooms for 3rd year -->
+           
+                {% for cls in class %}
+                    {% if cls.year == "3rd" %}  <!-- Filter by year -->
+                        <a href="update/{{ cls.id }}/2024-03-01"> {{ cls.year }} - {{ cls.section }} </a>
+                    {% endif %}
+                {% endfor %}
+            
+        {% else %}
+            <p>No classrooms available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="content1">
+    <div class="card">
+        <span class="badge" id="messageCount"></span>
+        <img src="{% static 'images/message.png' %}" alt="Logo">
+    <button onclick="openModal('message')" >View</button>
+    </div>
+    <div class="card">
+        <span class="badge" id="leaveLetterCount"></span>
+        <img src="{% static 'images/form.png' %}" alt="Logo">
+    <button onclick="openModal('leave_letters')" >View</button>
+    </div>
+<div class="card">
+    <img src="{% static 'images/attendance.png' %}" alt="Logo">
+<button onclick="openModal('attendance')">Search Attendance</button>
+</div>
+<div class="card">
+    <img src="{% static 'images/student.png' %}" alt="Logo">
+<button onclick="openModal('student')">Search Student</button>
+</div>
+</div>
+
+<div id="message" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('message')">&times;</span>
+        <!-- Your attendance modal content here -->
+        <div>
+            <h4>Circulars</h4>
+        </div>
+    </div>
+</div>
+
+<div id="leave_letters" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('leave_letters')">&times;</span>
+        <h4>leave letters</h4>
+        <div style="display: flex;flex-wrap: wrap;justify-content:space-evenly;">
+            
+            
+            {% for leave in leave%}
+            {% for student in student%}
+            {% if student.user == leave.user %}
+            <div class="leave_card">
+            <h5>Received : {{leave.created}}</h5>
+          
+                <h4 style="color: green;"> {{student.name}}</h4>
+                <h6>{{student.reg}}</h6>
+            
+            <h6> {{student.classroom}}</h6>
+            <h6>{{student.mobile}}</h6>
+            <div class="line">
+            <h6> {{leave.type}}</h6>
+            <h6> {{leave.start}}--- To ---{{leave.end}}</h6>
+        </div>
+            <p> {{leave.message}}</p>
+        </div>
+            {% endif%}
+            {% endfor%}
+            {% endfor%}
+           
+        </div>
+       
+    </div>
+</div>
+
+<div id="attendance" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('attendance')">&times;</span>
+        <!-- Your attendance modal content here -->
+        <div>
+            <h4>Serach Attendace</h4>
+            <form action="attendance_record" method="post" class="attendance-form">
+                <select name="classroom_id" class="classroom-select">
+                    {% for cls in class %}
+                        <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                            {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="date" name="dates" id="dates" class="date-input">
+                {% csrf_token %}
+                <button type="submit" class="submit-button">Search</button>
+            </form>
+            </div>
+    </div>
+</div>
+
+
+
+
+    <div id="student" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('student')">&times;</span>
+            <!-- Your student modal content here -->
+            <div>
+                <h4>Serach Students</h4>
+                <form action="search_student" method="post" class="attendance-form">
+                    <select name="classroom_id" class="classroom-select">
+                        {% for cls in class %}
+                            <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                                {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="reg"  class="date-input" placeholder="Register No">
+                    {% csrf_token %}
+                    <button type="submit" class="submit-button">Search</button>
+                </form>
+                <p style="color: red;font-size: x-small;">*type 'all' in register number input to see all the students in selected classroom</p>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+      var messageCount = document.querySelectorAll('#message .leave_card').length;
+        document.getElementById('messageCount').textContent = messageCount;
+
+        // Calculate and set count for leave_letters modal
+        var leaveLetterCount = document.querySelectorAll('#leave_letters .leave_card').length;
+        document.getElementById('leaveLetterCount').textContent = leaveLetterCount;
+        
+    function submitForm() {
+        // Get the input value
+        var inputDate = document.getElementById('dates').value;
+    
+        // Convert the input value to the desired format (YYYY-MM-DD)
+        var formattedDate = new Date(inputDate).toISOString().split('T')[0];
+    
+        // Set the formatted value back to the input
+        document.getElementById('dates').value = formattedDate;
+    
+        // Submit the form
+        document.getElementById('myForm').submit();
+    }
+    function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        // Function to close the modal
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+   
+    </script>
+ 
+</body>
+</html>

@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>student</title>
+    <link rel="stylesheet" href="{% static 'css/student_landing.css' %}">
+<style>
+  .nav {
+    height: 50px;
+    display: flex;
+    position: relative;
+    top: 0px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-bottom: 40px;/* Example background color */
+}
+.nav a{
+    width: 40px;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    
+}
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-image: radial-gradient(circle at center center, rgba(217, 217, 217,0.05) 0%, rgba(217, 217, 217,0.05) 15%,rgba(197, 197, 197,0.05) 15%, rgba(197, 197, 197,0.05) 34%,rgba(178, 178, 178,0.05) 34%, rgba(178, 178, 178,0.05) 51%,rgba(237, 237, 237,0.05) 51%, rgba(237, 237, 237,0.05) 75%,rgba(138, 138, 138,0.05) 75%, rgba(138, 138, 138,0.05) 89%,rgba(158, 158, 158,0.05) 89%, rgba(158, 158, 158,0.05) 100%),radial-gradient(circle at center center, rgb(255,255,255) 0%, rgb(255,255,255) 6%,rgb(255,255,255) 6%, rgb(255,255,255) 12%,rgb(255,255,255) 12%, rgb(255,255,255) 31%,rgb(255,255,255) 31%, rgb(255,255,255) 92%,rgb(255,255,255) 92%, rgb(255,255,255) 97%,rgb(255,255,255) 97%, rgb(255,255,255) 100%); background-size: 42px 42px;
+
+    margin: 10%  auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.card {
+    
+    width: 120px;
+    height: 120px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    border-radius: 6px;
+
+}
+button{
+    width: 110px;
+    background-color: mediumseagreen;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+   font-size: xx-small;
+    margin:4px;
+    font-weight: bold;
+}
+.content1{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.content1 img {
+    margin-bottom: 8px;
+    width: 60px; /* Set a fixed width */
+    height: 60px; /* Set a fixed height */
+}
+.attendance-form {
+    max-width: 400px; /* Adjust as needed */
+    margin: 0 auto;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 100px;/* Ensure content wraps to new line when there's not enough space */
+
+}
+
+label{
+  font-weight: bold;
+  font-size: small;
+  margin: 6px 0px;
+}
+@media only screen and (max-width: 600px) {
+  .nav img{
+                width: 150px;
+            }
+          }
+</style>
+</head>
+<body>
+    <div class="nav">
+    <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo" >
+    
+    
+    <a class="button" href="logout/">logout</a>
+
+</div>
+
+    {% if welcome_student %}
+    <h3>Welcome,  {{student.name}}!</h3>
+    <div class="details">
+        <div>
+            <img src="{% static 'images/user.png' %}" width="90px">
+        </div>
+        <div>
+    <h4>Register No: {{student.reg}}</h4>
+    <h4>Class : {{student.classroom}}</h4>
+    <h4>Department : {{student.classroom.department}}</h4>
+</div>
+</div>
+
+    {% endif %}
+    
+    <div class="card">
+      <img src="{% static 'images/message.png' %}" alt="Logo" width="40px" style="margin-bottom: 10px;">
+      <button onclick="openModal('message')">View</button>
+    </div>
+    <div class="content1">
+      
+
+
+     
+
+    <h3> Today Attendance Records</h3>
+
+  {% for record in attendance_records %}
+  <div class="line">
+    <h4>{{ record.date }} </h4>
+    <div>
+        <form id="filterForm">
+            <label for="date">Filter by Date:</label>
+            <input type="date" id="date" name="date">
+        </form>
+        
+    </div>
+
+  </div>
+  <table>
+    <tr>
+      <th>Hour</th>
+      <th>Present</th>
+    </tr>
+    <tr>
+      <td>Hour 1</td>
+      <td class="{% if record.hour_1_present %}true{% else %}false{% endif %}">{{ record.hour_1_present }}</td>
+    </tr>
+    <tr>
+      <td>Hour 2</td>
+      <td class="{% if record.hour_2_present %}true{% else %}false{% endif %}">{{ record.hour_2_present }}</td>
+    </tr>
+    <tr>
+      <td>Hour 3</td>
+      <td class="{% if record.hour_3_present %}true{% else %}false{% endif %}">{{ record.hour_3_present }}</td>
+    </tr>
+    <tr>
+      <td>Hour 4</td>
+      <td class="{% if record.hour_4_present %}true{% else %}false{% endif %}">{{ record.hour_4_present }}</td>
+    </tr>
+    <tr>
+      <td>Hour 5</td>
+      <td class="{% if record.hour_5_present %}true{% else %}false{% endif %}">{{ record.hour_5_present }}</td>
+    </tr>
+  </table>
+  
+  
+  {% endfor %}
+  <div id="message" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('message')">&times;</span>
+        <!-- Your leave letter modal content here -->
+        <div>
+            <h2 style="color: darkblue;">Leave Letter Form</h2>
+            <form method="post" action="{% url 'leave' %}" class="attendance-form">
+                {% csrf_token %}
+                <label>Staff</label>
+                <select id="staff" name="staff">
+                    <option value="">Select staff</option>
+                    <!-- Populate staff options dynamically from your backend -->
+                    {% for staff_member in staff %}
+                        <option value="{{ staff_member.id }}">{{ staff_member.name }}</option>
+                    {% endfor %}
+                </select>
+                
+                <label for="type">Leave Type:</label>
+                <select id="type" name="type">
+                  <option value="Sick Leave">Sick Leave</option>
+                  <option value="Parental Leave">Parental Leave</option>
+                  <option value="Educational Leave">Educational Leave</option>
+                  <option value="Religious Observance Leave">Religious Observance Leave</option>
+                  <option value="Family Event Leave">Family Event Leave</option>
+              </select>
+                
+                <label for="start">Start Date:</label>
+                <input type="date" id="start" name="start">
+                
+                <label for="end">End Date:</label>
+                <input type="date" id="end" name="end">
+                
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4"></textarea>
+                
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+  <script>
+    // Function to open the modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+/* CSS in student_landing.css */
+
+.nav{
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    align-items: center;
+    color:darkblue;
+    padding: 0px 10px;
+}
+h3{
+    color: darkblue;
+}
+.line{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.details { 
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-bottom: 2px groove whitesmoke;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color:lightblue;
+}
+
+.true {
+    color: green;
+}
+
+.false {
+    color: red;
+}
+.button{
+    padding: 6px;
+    background-color: mediumseagreen;
+    color:white;
+    font-weight: bolder;
+    border-radius: 6px;
+}
+a{
+    text-decoration: none;
+}
+
+/* Additional CSS for responsiveness */
+@media only screen and (max-width: 768px) {
+    .nav {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .button {
+        margin-top: 10px; /* Adjust spacing for buttons */
+    }
+    .nav img{
+        width: 200px;
+    }
+}

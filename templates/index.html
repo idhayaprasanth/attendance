@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+    <div class="nav">
+        <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
+        <a class="button" href="logout/">logout</a>
+    </div>
+    <div class="content">
+        <div class="card">
+            <img src="{% static 'images/student.jpg' %}" alt="Logo" class="logo" width="100%">
+            <a class="button" href="student">Register as Student</a>
+        </div>    
+        <div class="card">
+            <img src="{% static 'images/staff.jpg' %}" alt="Logo" class="logo" width="100%">
+            <a class="button" href="staff">Register as Staff</a>
+        </div>  
+    </div>
+</body>
+</html>

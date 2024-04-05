@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT Data</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>IoT Sensor Data</h1>
+    <div id="distance-value">Distance: </div>
+    
+    <script>
+        $(document).ready(function(){
+            function fetchDistance() {
+                $.get('/iot/', function(data) {
+                    $('#distance-value').text("Distance: " + data.distance + " cm");
+                });
+            }
+
+            // Fetch the distance data initially when the page loads
+            fetchDistance();
+
+            // Set up interval to fetch the distance data every 1 second
+            setInterval(fetchDistance, 1000);
+        });
+    </script>
+</body>
+</html>

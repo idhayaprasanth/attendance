@@ -1,0 +1,106 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-bottom: 40px;/* Example background color */
+}
+.nav a{
+    width: 40px;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    
+}
+
+
+.button {
+    padding: 6px 8px;
+    background-color: #007bff; /* Example button color */
+    color: #fff; /* Example text color */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.button:hover {
+    background-color: #0056b3; /* Example hover color */
+}
+
+
+/* Styles for request cards */
+.request-card {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+
+
+
+.request-actions {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.accept-link, .decline-link {
+    text-decoration: none;
+    padding: 2px 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 15px;
+    font-size: small;
+    font-weight: bolder;
+    
+    
+}
+
+.accept-link {
+    background-color: green;
+    color: white;
+}
+
+.accept-link:hover {
+    background-color: #008000; /* Darker green on hover */
+}
+
+.decline-link {
+    background-color: red;
+    color: white;
+}
+
+.decline-link:hover {
+    background-color: #ff0000; /* Darker red on hover */
+}
+
+/* Styles for request icon */
+
+
+
+@media only screen and (max-width: 768px) {
+  
+   
+    .nav img{
+        width: 200px;
+    }
+}

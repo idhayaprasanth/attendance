@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Attendance</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px groove gainsboro;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: lightskyblue;
+            font-size: small;
+        }
+        tr {
+            font-size: x-small;
+            font-weight: bold;
+        }
+       
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            width: 80px;
+            background-color: mediumseagreen;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 6px;
+            font-size: xx-small;
+            margin: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h5 style="color: navy;">Update Attendance</h5>
+    <form method="post">
+        {% csrf_token %}
+        {% if formset.management_form %}
+        {{ formset.management_form }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Reg</th>
+                    <th>Hour 1 </th>
+                    <th>Hour 2 </th>
+                    <th>Hour 3 </th>
+                    <th>Hour 4 </th>
+                    <th>Hour 5 </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr>
+                    <td>{{ form.instance.id }}</td>
+                    <td>{{ form.instance.student.reg }}</td>
+                    {{ form.id }}
+                    {% for field in form.visible_fields %}
+                    <td>
+                        {{ field }}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center;font-weight: bold;color: red;">No Students Available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Save</button>
+    </form>
+    {% else %}
+    <h6 style="text-align: center;">No Fields to Display</h6>
+    {% endif %}
+</body>
+</html>

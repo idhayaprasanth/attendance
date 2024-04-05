@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Update Attendance for {{ student }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button type="submit">Update Attendance</button>
+</form>
+
+<h3>Attendance Records</h3>
+<ul>
+  {% for record in attendance_records %}
+    <li>{{ record.date }} - Hour 1: {{ record.hour_1_present }}, Hour 2: {{ record.hour_2_present }}, Hour 3: {{ record.hour_3_present }}, Hour 4: {{ record.hour_4_present }}, Hour 5: {{ record.hour_5_present }}</li>
+  {% endfor %}
+</ul>
+</body>
+</html>

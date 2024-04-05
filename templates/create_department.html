@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Department</title>
+</head>
+<body>
+    <h2>Create Department</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Department Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+        
+        <label for="search_user">Search User:</label><br>
+        <input type="text" id="search_user" name="search_user" placeholder="Search User">
+        <select id="user" name="user">
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Create Department</button>
+    </form>
+</body>
+</html>
