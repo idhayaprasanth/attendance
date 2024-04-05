@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import DepartmentForm
+from .forms import DepartmentForm,CircularForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from college.models import Request,student_record,department,attendance,classroom,staff,Iot,leave_letter
+from college.models import Request,student_record,department,attendance,classroom,staff,Iot,leave_letter,Circular
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import JsonResponse
@@ -54,6 +54,7 @@ def index(request):
             classrooms = None 
             leave = None
             student = None
+            circular = None
              # Default value
             try:
                 staff_obj = staff.objects.get(created_by=request.user)
@@ -62,6 +63,7 @@ def index(request):
                     student = student_record.objects.filter(classroom__in = classrooms)
                     
                 leave = leave_letter.objects.filter(staff=staff_obj)
+                circular = Circular.objects.filter(department = staff_obj.department)
               
                 
                 
@@ -69,7 +71,7 @@ def index(request):
             except staff.DoesNotExist:
                 pass  # Handle the case when no staff object is found
             
-            return render(request, 'staff_landing.html', {'staff_with_accepted_request': staff_with_accepted_request, 'class': classrooms,'leave':leave,'student':student})
+            return render(request, 'staff_landing.html', {'staff_with_accepted_request': staff_with_accepted_request, 'class': classrooms,'leave':leave,'student':student,'circular':circular})
         else:
             return render(request, 'index.html')
     else:
@@ -88,3 +90,13 @@ def create_department(request):
     else:
         form = DepartmentForm()
     return render(request, 'create_department.html', {'form': form,'users':users})
+
+def create_circular(request):
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        message = request.POST.get('message')  # Corrected typo here
+        user = request.user
+        department_instance = department.objects.filter(user=user).first()  # Assuming there's only one department per user
+        circular = Circular.objects.create(user=user, department=department_instance, image=image, message=message)
+        response_data = {'message': 'Successfully created circular.'}
+        return JsonResponse(response_data)

@@ -28,6 +28,7 @@ urlpatterns = [
     path('iot/', views.iot, name='iot'),
     path('sensor_data/', views.sensor_data, name='sensor_data'),
     path('admin/', admin.site.urls),
+    path('create_circular/',views.create_circular,name="create_circular"),
     path('test/<int:student_id>/<str:date>/',attendance.test,name='test'),
     path('leave/', attendance.leave_letters, name='leave'),
     path('update/<str:class_id>/<str:dates>/',attendance.update,name='update'),

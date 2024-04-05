@@ -317,8 +317,15 @@ p,h4,h6,h5{
     <div class="modal-content">
         <span class="close" onclick="closeModal('message')">&times;</span>
         <!-- Your attendance modal content here -->
-        <div>
-            <h4>Circulars</h4>
+        <h4>Circulars</h4>
+
+            {% for circular in circular %}
+        <div class="circular">
+            
+            <img src="{{ circular.image }}" width="200px">
+            <p>{{ circular.message }}</p>
+                
+            {% endfor %}
         </div>
     </div>
 </div>
@@ -409,8 +416,8 @@ p,h4,h6,h5{
 
 
 <script>
-      var messageCount = document.querySelectorAll('#message .leave_card').length;
-        document.getElementById('messageCount').textContent = messageCount;
+     var MessageCount = document.querySelectorAll('#message .circular').length;
+    document.getElementById('messageCount').textContent = MessageCount;
 
         // Calculate and set count for leave_letters modal
         var leaveLetterCount = document.querySelectorAll('#leave_letters .leave_card').length;

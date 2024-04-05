@@ -110,6 +110,13 @@ class leave_letter(models.Model):
     end = models.DateField()
     message = models.TextField(blank = False)
     created = models.DateTimeField(auto_now_add=True)
-   
+
+class Circular(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    department = models.ForeignKey(department, on_delete=models.CASCADE)  # Correcting the department ForeignKey
+    image = models.ImageField(blank=True)
+    message = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
 class Iot (models.Model):
     data= models.IntegerField()

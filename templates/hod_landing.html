@@ -4,9 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/hod_landing.css' %}">
     <title>Document</title>
+    <style>
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-image: radial-gradient(circle at center center, rgba(217, 217, 217,0.05) 0%, rgba(217, 217, 217,0.05) 15%,rgba(197, 197, 197,0.05) 15%, rgba(197, 197, 197,0.05) 34%,rgba(178, 178, 178,0.05) 34%, rgba(178, 178, 178,0.05) 51%,rgba(237, 237, 237,0.05) 51%, rgba(237, 237, 237,0.05) 75%,rgba(138, 138, 138,0.05) 75%, rgba(138, 138, 138,0.05) 89%,rgba(158, 158, 158,0.05) 89%, rgba(158, 158, 158,0.05) 100%),radial-gradient(circle at center center, rgb(255,255,255) 0%, rgb(255,255,255) 6%,rgb(255,255,255) 6%, rgb(255,255,255) 12%,rgb(255,255,255) 12%, rgb(255,255,255) 31%,rgb(255,255,255) 31%, rgb(255,255,255) 92%,rgb(255,255,255) 92%, rgb(255,255,255) 97%,rgb(255,255,255) 97%, rgb(255,255,255) 100%); background-size: 42px 42px;
+    margin: 10%  auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.card {
+    
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-bottom: 50px;
+    border-radius: 6px;
+
+}
+
+button{
+    width: 110px;
+    background-color: mediumseagreen;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+   font-size: xx-small;
+    margin:4px;
+    font-weight: bold;
+}
+
+.content1{
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+.content1 img {
+    margin-bottom: 8px;
+    width: 60px; /* Set a fixed width */
+    height: 60px; /* Set a fixed height */
+}
+    </style>
 </head>
 <body>
     <!-- User information and logout link -->
@@ -33,9 +107,63 @@
     </div>
 
     <!-- Staff Requests -->
-   
+    <div class="content1">
+        <div class="card">
+            <img src="{% static 'images/message.png' %}" alt="Logo">
+        <button onclick="openModal('circular')" >create</button>
+        </div>
+        </div>
 
     <!-- Popup for Requests -->
-    
+    <div id="circular" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('circular')">&times;</span>
+        <h4>Create Circular</h4>
+        <form id="your-form-id" action="create_circular" method="post" onsubmit="createCircular(); return false;">
+            {% csrf_token %}
+            <input type="file" name = image style="margin-bottom: 6px;" >
+           <textarea name="message" style="height: 200px; width: 80%;"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+    </div>
+
+
+    <script>
+         function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        // Function to close the modal
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+
+        function createCircular() {
+        var form_data = new FormData(document.getElementById("your-form-id"));
+        $.ajax({
+            url: '/create_circular/',
+            type: 'POST',
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert(response.message);
+                document.getElementById("your-form-id").reset(); // Reset form fields
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    }
+    </script>
 </body>
 </html>

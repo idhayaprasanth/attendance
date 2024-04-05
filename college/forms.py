@@ -2,13 +2,16 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from .models import department,staff,classroom,student_record,attendance,leave_letter
+from .models import department,staff,classroom,student_record,attendance,leave_letter,Circular
 from django.utils import timezone
-
 from django.forms import formset_factory
-
 from django.forms import modelformset_factory
 
+
+class CircularForm(forms.ModelForm):
+    class Meta:
+        model = Circular
+        fields = ['user', 'department', 'image', 'message']
 
 class LeaveLetterForm(forms.ModelForm):
     class Meta:
