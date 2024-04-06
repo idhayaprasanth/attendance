@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from college.models import attendance,department,classroom,student_record,leave_letter
+from college.models import attendance,department,classroom,student_record,leave_letter,Request,staff
 from django.shortcuts import render, get_object_or_404, redirect
 from college.forms import AttendanceForm,LeaveLetterForm
 from datetime import datetime
@@ -182,3 +182,56 @@ def test(request, student_id,date):
         'form': form,
     }
     return render(request, 'test.html', context)
+
+def percentage(request):
+    if request.method == 'POST':
+        classroom_id = request.POST.get('classroom_id')
+        start_date_str = request.POST.get('start_date')
+        end_date_str = request.POST.get('end_date')
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        student_records = student_record.objects.filter(classroom=classroom_id)
+        
+        students_attendance = {}  # Dictionary to store each student's attendance details
+        
+        for student in student_records:
+            attendance_records = attendance.objects.filter(
+                student=student,
+                date__range=[start_date, end_date]
+            )
+
+            total_working_days = 4  # Assuming total working days
+            total_present_days = 0
+            total_leave_days = 0
+            
+            for record in attendance_records:
+                if record.present == 'Full Day':
+                    total_present_days += 1
+                elif record.present == 'Half Day':
+                    total_present_days += 0.5
+                elif record.present == 'Leave':
+                    total_leave_days += 1
+            total_days = total_present_days + total_leave_days
+            percentage_present = (total_present_days / total_working_days) * 100
+
+            # Store student's attendance details in the dictionary
+            students_attendance[student] = {
+                'percentage_present': percentage_present,
+                'total_leave_days': total_leave_days
+            }
+
+        # Define your alert message
+        alert_message = ""
+        for student, attendance_details in students_attendance.items():
+            alert_message += f"Student: {student} Percentage of attendance: {attendance_details['percentage_present']}%, present days :{total_days}, Leave days: {attendance_details['total_leave_days']}\n"
+
+        # You can return the alert message as an HTTP response
+        return HttpResponse('<script>alert("' + alert_message + '"); window.history.back();</script>')
+    else:
+        # Handle GET request method here
+        # For example, return a form to input classroom_id, start_date, and end_date
+        return render(request, 'percentage.html')
+ 
+     
+            
+         

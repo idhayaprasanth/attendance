@@ -4,7 +4,7 @@ from datetime import date
 from django.utils import timezone
 
 
-    
+
 class department(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -52,7 +52,7 @@ class classroom(models.Model):
     subject9 = models.CharField(max_length=100,null=True)
 
     def __str__(self):
-        return f" {self.year} -{self.section}-{self.department}"
+        return f" {self.id}- {self.year} -{self.section}-{self.department}"
 class student_record(models.Model):  
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     classroom = models.ForeignKey(classroom,on_delete=models.CASCADE)
@@ -77,7 +77,27 @@ class attendance(models.Model):
     hour_3_present = models.BooleanField(default=False, null=True)
     hour_4_present = models.BooleanField(default=False, null=True)
     hour_5_present = models.BooleanField(default=False, null=True)
-    # Add fields to track user history
+    PRESENT_CHOICES = [
+        ('Full Day', 'Full Day'),
+        ('Half Day', 'Half Day'),
+        ('Leave', 'Leave'),
+    ]
+    
+    present = models.CharField(max_length=8,default='Leave', choices=PRESENT_CHOICES, null=True)
+
+    def calculate_present_status(self):
+        if self.hour_1_present and self.hour_2_present and self.hour_3_present and self.hour_4_present and self.hour_5_present:
+            self.present = "Full Day"
+        elif (self.hour_1_present and self.hour_2_present) or (self.hour_3_present and self.hour_4_present and self.hour_5_present):
+            self.present = "Half Day"
+        else:
+            self.present = "Leave"
+
+    def save(self, *args, **kwargs):
+        self.calculate_present_status()
+        super(attendance, self).save(*args, **kwargs)
+
+    
     def __str__(self):
         return f"{self.date} - {self.classroom} - {self.student}"
 

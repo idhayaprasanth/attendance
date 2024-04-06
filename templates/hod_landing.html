@@ -80,6 +80,15 @@ button{
     width: 60px; /* Set a fixed width */
     height: 60px; /* Set a fixed height */
 }
+.badge {
+            background-color: red;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 50%;
+            font-size: smaller;
+            font-weight:bold ;
+            transform: translate(260%, 0%);
+}
     </style>
 </head>
 <body>
@@ -88,32 +97,43 @@ button{
         <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
         <a class="button" href="logout/">logout</a>
     </div>
-
+    <h5 style="text-align: center;color: darkblue;"> Department of {{department_obj.name}}</h5>
     <h4>welcome {{ department_obj.user }}!</h4>
-    <h4>Head of {{department_obj.name}} Department</h4>
+    
 
-    <div class="request-card">
-        {% for request in user.received_requests.all %}
-            {% if request.status == 'pending' %}
-                   
-                    <div class="request-actions">
-                        <h5>{{ request.staff.name }}</h5>
-                        <a href="{% url 'accept_request' request_id=request.id %}" class="accept-link">Accept</a>
-                        <a href="{% url 'decline_request' request_id=request.id %}" class="decline-link">Decline</a>
-                    </div>
-                
-            {% endif %}
-        {% endfor %}
-    </div>
+    
 
     <!-- Staff Requests -->
     <div class="content1">
         <div class="card">
+            <span class="badge" id="requestCount"></span>
+            <img src="{% static 'images/request.jpg' %}"  alt="Logo">
+        <button onclick="openModal('request')" >view</button>
+        </div>
+        <div class="card">
             <img src="{% static 'images/message.png' %}" alt="Logo">
-        <button onclick="openModal('circular')" >create</button>
+        <button  onclick="openModal('circular')" >create</button>
         </div>
         </div>
-
+        <div id="request" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('request')">&times;</span>
+        <h4>Staff Requests</h4>
+            {% for request in user.received_requests.all %}
+                {% if request.status == 'pending' %}
+                       
+                        <div class="request-actions">
+                            <h5>{{ request.staff.name }}</h5>
+                            <a href="{% url 'accept_request' request_id=request.id %}" class="accept-link">Accept</a>
+                            <a href="{% url 'decline_request' request_id=request.id %}" class="decline-link">Decline</a>
+                        </div>
+                    
+                {% endif %}
+            {% endfor %}
+        
+                
+    </div>
+</div>
     <!-- Popup for Requests -->
     <div id="circular" class="modal">
     <div class="modal-content">
@@ -131,6 +151,10 @@ button{
 
 
     <script>
+
+        var requestCount = document.querySelectorAll('#request .request-actions').length;
+        document.getElementById('requestCount').textContent = requestCount;
+
          function openModal(modalId) {
             var modal = document.getElementById(modalId);
             if (modal) {

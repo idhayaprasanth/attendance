@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/staff_landing.css' %}">
     <style>
         body {
+        margin: 0px;
    
 }
 
@@ -177,6 +178,7 @@
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     margin-bottom: 50px;
     border-radius: 6px;
+    margin-right: 10px;
 
 }
 
@@ -319,14 +321,14 @@ p,h4,h6,h5{
         <!-- Your attendance modal content here -->
         <h4>Circulars</h4>
 
-            {% for circular in circular %}
+        {% for circular in circular reversed %}
         <div class="circular">
-            
-            <img src="{{ circular.image }}" width="200px">
+            {% if circular.image %}
+                <img src="{{ circular.image.url }}" width="100%">
+            {% endif %}
             <p>{{ circular.message }}</p>
-                
-            {% endfor %}
         </div>
+    {% endfor %}
     </div>
 </div>
 
@@ -337,7 +339,7 @@ p,h4,h6,h5{
         <div style="display: flex;flex-wrap: wrap;justify-content:space-evenly;">
             
             
-            {% for leave in leave%}
+            {% for leave in leave reversed%}
             {% for student in student%}
             {% if student.user == leave.user %}
             <div class="leave_card">
@@ -352,7 +354,7 @@ p,h4,h6,h5{
             <h6> {{leave.type}}</h6>
             <h6> {{leave.start}}--- To ---{{leave.end}}</h6>
         </div>
-            <p> {{leave.message}}</p>
+             <p> {{leave.message}}</p>
         </div>
             {% endif%}
             {% endfor%}

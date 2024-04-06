@@ -10,10 +10,9 @@
     <style>
         .nav{
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             color: darkblue;
-            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-            padding-bottom: 10px;
+            padding-bottom: 0px;
         }
         .nav img{
             width: 250px;
@@ -93,13 +92,14 @@
 <body>
     <div class="nav">
     <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
-    <h4>Attendeance Record</h4>
 </div>
+<h4 style="text-align: center;">Attendeance Record</h4>
+
     {% if records %}
-    {% for record in records %}
-   
-    <h5>Date : {{ record.date }}</h5>
-    <h5>Class : {{ record.classroom }}</h5>
+    {% with records.0 as first_record %}
+    <h6>Date : {{ first_record.date }}</h6>
+    <h6>Class : {{ first_record.classroom }}</h6>
+{% endwith %}
     <table>
         <thead>
             <tr>
@@ -112,6 +112,7 @@
             </tr>
         </thead>
         <tbody>
+            {% for record in records %}
             <tr>
                 <td>{{ record.student.reg }}</td>
                 <td><div class="custom-checkbox{% if record.hour_1_present %} checked{% endif %}" data-state="{% if record.hour_1_present %}True{% else %}False{% endif %}"></div></td>
@@ -119,6 +120,7 @@
                 <td><div class="custom-checkbox{% if record.hour_3_present %} checked{% endif %}" data-state="{% if record.hour_3_present %}True{% else %}False{% endif %}"></div></td>
                 <td><div class="custom-checkbox{% if record.hour_4_present %} checked{% endif %}" data-state="{% if record.hour_4_present %}True{% else %}False{% endif %}"></div></td>
                 <td><div class="custom-checkbox{% if record.hour_5_present %} checked{% endif %}" data-state="{% if record.hour_5_present %}True{% else %}False{% endif %}"></div></td>
+                {% endfor %}
             </tr>
         </tbody>
     </table>
@@ -126,7 +128,7 @@
     <!-- Print and Download buttons -->
     <button class="btn" onclick="printAttendance()">Print</button>
 
-    {% endfor %}
+ 
     {% else %}
     <p>No attendance records found.</p>
     {% endif %}
