@@ -217,20 +217,20 @@ def percentage(request):
             # Store student's attendance details in the dictionary
             students_attendance[student] = {
                 'percentage_present': percentage_present,
-                'total_leave_days': total_leave_days
+                'total_leave_days': total_leave_days,
+                'total_days': total_days,
+                'total_working_days': total_working_days
             }
 
-        # Define your alert message
-        alert_message = ""
-        for student, attendance_details in students_attendance.items():
-            alert_message += f"Student: {student} Percentage of attendance: {attendance_details['percentage_present']}%, present days :{total_days}, Leave days: {attendance_details['total_leave_days']}\n"
+        # Pass the students_attendance dictionary to the template context
+        context = {
+            'students_attendance': students_attendance
+        }
 
-        # You can return the alert message as an HTTP response
-        return HttpResponse('<script>alert("' + alert_message + '"); window.history.back();</script>')
+        # You can return the context along with your HTML template
+        return render(request, 'student_record.html', context)
     else:
-        # Handle GET request method here
-        # For example, return a form to input classroom_id, start_date, and end_date
-        return render(request, 'percentage.html')
+        return HttpResponse("ERROR")
  
      
             

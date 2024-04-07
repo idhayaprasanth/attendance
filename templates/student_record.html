@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-         table {
+        table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 40px;
@@ -22,50 +22,118 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        .center{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px groove gainsboro;
+        }
+        @media print {
+            .custom-checkbox:before {
+                content: attr(data-state);
+            }
+
+            .custom-checkbox.checked:before {
+                content: attr(data-state);
+            }
+        }
+
+        /* Added some basic styles for buttons */
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        @media only screen and (max-width: 600px) {
+        .logo{
+            width: 150px;
+        }
+        .btn {
+                padding: 4px 14px;
+                margin: 5px;
+                font-size: 14px;
+            }
+    }
     </style>
 </head>
 <body>
+    <div class="center">
     <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
+    <h5 style="font-size: small;color: grey;">G.T. N. Arts College,
+        (Autonomous)
+        Affiliated to Madurai Kamaraj University
+        Accredited by NAAC with 'A++' Grade
+        Karur Road,
+        Dindigul - 624 005</h5>
+</div>
     {% if student %}
-    {% for student in student %}
-    <table>
-        
-    <thead>
-        <h4 style="text-align: center;">Student Details</h4>
-        <tr>
-            <th>Student</th>
-            <th>Reg No</th>
-            <th>classroom</th>
-            <th>Mobile</th>
-            <th>Gender</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if student.gender == "female" %}
-        <tr>
-            <td>{{student.name}}</td>
-            <td>{{student.reg}}</td>
-            <td>{{student.classroom}}</td>
-            <td>{{student.mobile}}</td>
-            <td>{{student.gender}}</td>
-            </tr>
-            {% elif student.gender == "male" %}
-        <tr>
-            <td>{{student.name}}</td>
-            <td>{{student.reg}}</td>
-            <td>{{student.classroom}}</td>
-            <td>{{student.mobile}}</td>
-            <td>{{student.gender}}</td>
-            </tr>
+        <h4 style="text-align: center;color: green;">Student Details</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Reg No</th>
+                    <th>Classroom</th>
+                    <th>Mobile</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for single_student in student %}
+                    <tr>
+                        <td>{{ single_student.name }}</td>
+                        <td>{{ single_student.reg }}</td>
+                        <td>{{ single_student.classroom }}</td>
+                        <td>{{ single_student.mobile }}</td>
+                        <td>{{ single_student.gender }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
-            {% endif %}
         </table>
-            
     
-    {% endfor %}
-    {% else %}
-    <p>No student found.</p>
     {% endif %}
     
+    {% if students_attendance %}
+        {% for student, attendance_details in students_attendance.items %}
+            {% if forloop.first %}
+                <h4 style="color: green;text-align: center;">Student Attendance Details</h4>
+                <h5>Class : {{ student.classroom }}</h5>
+                <h5>Total Working Days : {{ attendance_details.total_working_days }}</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>%</th>
+                            <th>Present</th>
+                            <th>Leave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            {% endif %}
+                            <tr>
+                                <td>{{ student.name }}</td>
+                                <td>{{ attendance_details.percentage_present }}%</td>
+                                <td>{{ attendance_details.total_days }}</td>
+                                <td>{{ attendance_details.total_leave_days }}</td>
+                            </tr>
+            {% if forloop.last %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <button class="btn" onclick="printrecord()">Print</button>
+    <script>
+        function printrecord() {
+            window.print();
+        }
+
+    </script>
 </body>
 </html>

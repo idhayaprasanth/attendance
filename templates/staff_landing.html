@@ -229,6 +229,28 @@ p,h4,h6,h5{
             font-weight:bold ;
             transform: translate(260%, 0%);
 }
+.circular {
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-bottom: 40px;
+    background-color: white;
+}
+
+input{
+    background-color: #e6eeff;
+    
+}
+input[type="text"]::placeholder {
+    font-size: small; /* Placeholder text color */
+  }
+  select {
+    background-color: #e6eeff;
+    font-size: small;
+
+  }
+  label{
+    font-weight: bold;
+    font-size: small;
+  }
         /* Responsive Styling */
         @media only screen and (max-width: 600px) {
             .space {
@@ -313,6 +335,10 @@ p,h4,h6,h5{
     <img src="{% static 'images/student.png' %}" alt="Logo">
 <button onclick="openModal('student')">Search Student</button>
 </div>
+<div class="card">
+    <img src="https://img.freepik.com/free-vector/pie-chart-concept-illustration_114360-1360.jpg?w=740&t=st=1712501166~exp=1712501766~hmac=995dce54b76e6af1034f096af2e48e1cd972974d3d5d554257b123e846b8c222" width="200px" alt="Logo">
+    <button onclick="openModal('percentage')">percentage</button>
+</div>
 </div>
 
 <div id="message" class="modal">
@@ -323,10 +349,11 @@ p,h4,h6,h5{
 
         {% for circular in circular reversed %}
         <div class="circular">
+            <h5 style="text-align:end ;">{{circular.created}}</h5>
             {% if circular.image %}
                 <img src="{{ circular.image.url }}" width="100%">
             {% endif %}
-            <p>{{ circular.message }}</p>
+            <p style="color: gray;">{{ circular.message }}</p>
         </div>
     {% endfor %}
     </div>
@@ -412,6 +439,43 @@ p,h4,h6,h5{
 
             </div>
         </div>
+    </div>
+
+</div>
+
+<div id="percentage" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('percentage')">&times;</span>
+        <h4 style="color: darkblue;margin-bottom: 20px;">Attendance percentage</h4>
+        <form action="/percentage/" method="post" class="attendance-form">
+            {% csrf_token %}
+            <label for="classroom_id">Classroom ID:</label><br>
+            <select id="classroom_id" name="classroom_id">
+                {% for cls in class %}
+                    {% if cls.year == "1st" %}
+                        <option value="{{ cls.id }}">{{ cls.year }} - {{ cls.section }}</option>
+                    {% endif %}
+                {% endfor %}
+                {% for cls in class %}
+                    {% if cls.year == "2nd" %}
+                        <option value="{{ cls.id }}">{{ cls.year }} - {{ cls.section }}</option>
+                    {% endif %}
+                {% endfor %}
+                {% for cls in class %}
+                    {% if cls.year == "3rd" %}
+                        <option value="{{ cls.id }}">{{ cls.year }} - {{ cls.section }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select><br><br>
+    
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date"><br><br>
+    
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date"><br><br>
+    
+            <button type="submit">Calculate</button>
+        </form>
     </div>
 
 </div>
