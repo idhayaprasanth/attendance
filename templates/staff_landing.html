@@ -233,6 +233,7 @@ p,h4,h6,h5{
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
     margin-bottom: 40px;
     background-color: white;
+    border-radius: 6px;
 }
 
 input{
@@ -250,6 +251,7 @@ input[type="text"]::placeholder {
   label{
     font-weight: bold;
     font-size: small;
+
   }
         /* Responsive Styling */
         @media only screen and (max-width: 600px) {
@@ -295,6 +297,8 @@ input[type="text"]::placeholder {
                         <a href="update/{{ cls.id }}/2024-03-01"> {{ cls.year }} - {{ cls.section }} </a>
                     {% endif %}
                 {% endfor %}
+
+               
            
                 {% for cls in class %}
                     {% if cls.year == "2nd" %}  <!-- Filter by year -->
@@ -352,6 +356,9 @@ input[type="text"]::placeholder {
             <h5 style="text-align:end ;">{{circular.created}}</h5>
             {% if circular.image %}
                 <img src="{{ circular.image.url }}" width="100%">
+                <a href="{{ circular.image.url }}" download="circular_image.jpg">
+                    <button>Download Image</button>
+                </a>
             {% endif %}
             <p style="color: gray;">{{ circular.message }}</p>
         </div>
@@ -506,6 +513,7 @@ input[type="text"]::placeholder {
             var modal = document.getElementById(modalId);
             if (modal) {
                 modal.style.display = 'block';
+                document.getElementById('messageCount').textContent = 0;
             }
         }
 

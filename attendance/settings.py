@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-e0(wm@^8t@$xk8fhr)ux2au$_g-hg=!_@_+rf06m#v-2=2#&j&
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.155.209','192.168.33.104']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.155.209','cc54-1-38-198-158.ngrok-free.app']
 #meia root 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
