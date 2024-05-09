@@ -114,7 +114,7 @@ def attendance_record(request):
         
         if attendance_records.exists():
             # Attendance records found, render the template with the records
-            return render(request, 'attendance_record.html', {'records': attendance_records})
+            return render(request, 'attendance_record.html', {'records': attendance_records,'all':True})
         else:
             # No attendance records found, display an appropriate message
             return render(request, 'attendance_record.html')
@@ -156,32 +156,19 @@ def leave_letters(request):
         
 
 
-def test(request, student_id,date):
-    students = get_object_or_404(student_record, id=student_id)
-    date_obj = datetime.strptime(date, '%Y-%m-%d').date()  # Convert string date to datetime object
-    attendance_records = attendance.objects.filter(student=students, date=date_obj)
-
-    if request.method == 'POST':
-        form = AttendanceForm(request.POST)
-        if form.is_valid():
-            # Update attendance records
-            for record in attendance_records:
-                record.hour_1_present = form.cleaned_data['hour_1_present']
-                record.hour_2_present = form.cleaned_data['hour_2_present']
-                record.hour_3_present = form.cleaned_data['hour_3_present']
-                record.hour_4_present = form.cleaned_data['hour_4_present']
-                record.hour_5_present = form.cleaned_data['hour_5_present']
-                record.save()
-            return redirect('index')  # Redirect to a success page
+def test(request):
+    if request.method == 'GET':
+        date_obj = request.GET.get('date')
+        students = student_record.objects.get(user=request.user)
+        attendance_records = attendance.objects.filter(student=students, date=date_obj)
+        
+        context = {
+            'records': attendance_records
+        }
+        return render(request, 'attendance_record.html', context)
     else:
-        form = AttendanceForm()
-
-    context = {
-        'student': students,
-        'attendance_records': attendance_records,
-        'form': form,
-    }
-    return render(request, 'test.html', context)
+        # Handle other HTTP methods if needed
+        return HttpResponse(status=405)
 
 def percentage(request):
     if request.method == 'POST':

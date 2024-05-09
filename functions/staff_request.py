@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
 from college.forms import StaffForm
-from college.models import Request
+from college.models import Request,staff
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -11,11 +11,17 @@ from django.contrib.auth.models import Group
 # Register staff and handle form submission, validation, and notification.
 @login_required
 def register_staff(request):
+    # Check if the user already has a staff instance
+    existing_staff_instance = staff.objects.filter(created_by=request.user).first()
+    if existing_staff_instance:
+        messages.error(request, 'You have already created a staff instance.')
+        return redirect('index')
+    
     if request.method == 'POST':
         form = StaffForm(request.POST)
         if form.is_valid():
             staff_instance = form.save(commit=False)
-            staff_instance.user = request.user
+            staff_instance.created_by = request.user
             staff_instance.save()
             send_request(staff_instance, request.user)
             messages.success(request, 'Staff registration successful!')
@@ -26,6 +32,7 @@ def register_staff(request):
     else:
         form = StaffForm()
     return render(request, 'register_staff.html', {'form': form})
+
 
 
 # Send a registration request to the department superuser based on staff details.
@@ -54,3 +61,13 @@ def decline_request(request, request_id):
     req.save()
     messages.info(request, 'Request declined!')
     return redirect('index')
+
+
+def delete_staff(request, staff_id):
+    staff_instance = get_object_or_404(staff, id=staff_id)
+    
+    if request.method == 'POST':
+        staff_instance.delete()
+        return redirect('staff_list')  # Redirect to a view that lists all staff
+    
+    return render(request, 'delete_staff_confirm.html', {'staff': staff_instance})

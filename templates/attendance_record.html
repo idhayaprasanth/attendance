@@ -54,6 +54,14 @@
             background-image: url("{% static 'images/greentick.png' %}");
         }
 
+        h5{
+            color: darkblue;
+        }
+        span{
+            color: black;
+            font-size: x-small;
+        }
+
         /* Print-specific styles */
         @media print {
             .custom-checkbox:before {
@@ -94,7 +102,7 @@
     <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
 </div>
 <h4 style="text-align: center;">Attendeance Record</h4>
-
+{% if all == True %}
     {% if records %}
     {% with records.0 as first_record %}
     <h6>Date : {{ first_record.date }}</h6>
@@ -132,6 +140,49 @@
     {% else %}
     <p>No attendance records found.</p>
     {% endif %}
+
+
+    {% else %}
+
+    {% if records %}
+    {% for record in records %}
+    <h5>Name : <span>{{record.student.name}}</span></h5>
+    <h5>Department : <span>{{record.student.classroom.department}}</span></h5>
+    <h5>Date :<span> {{record.date}}</span></h5>
+     <h5>Present : <span>{{record.present}}</span></h5>
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>I</th>
+                <th>II</th>
+                <th>III</th>
+                <th>IV</th>
+                <th>V</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+   
+    <tr>
+        <td>{{ record.student.reg }}</td>
+        <td><div class="custom-checkbox{% if record.hour_1_present %} checked{% endif %}" data-state="{% if record.hour_1_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_2_present %} checked{% endif %}" data-state="{% if record.hour_2_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_3_present %} checked{% endif %}" data-state="{% if record.hour_3_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_4_present %} checked{% endif %}" data-state="{% if record.hour_4_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_5_present %} checked{% endif %}" data-state="{% if record.hour_5_present %}True{% else %}False{% endif %}"></div></td>
+    </tr>
+</tbody>
+</table>
+<button class="btn" onclick="printAttendance()">Print</button>
+
+
+
+    {% endfor %}
+{% else %}
+    <p>No attendance records found.</p>
+{% endif %}
+{% endif %}
 
     <!-- JavaScript for Print and Download functionality -->
     <script>

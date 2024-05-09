@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  department, staff, classroom,  attendance,Request,student_record,Iot,leave_letter,Circular
+from .models import  batch,workingday, department, staff, classroom,  attendance,Request,student_record,Iot,leave_letter,Circular
 
 
 class RequestAdmin(admin.ModelAdmin):
@@ -11,6 +11,8 @@ admin.site.register(Request, RequestAdmin)
 admin.site.register(leave_letter)
 admin.site.register(Iot)
 admin.site.register(Circular)
+admin.site.register(workingday)
+admin.site.register(batch)
 
 @admin.register(department)
 class DepartmentAdmin(admin.ModelAdmin):

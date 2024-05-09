@@ -1,0 +1,220 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>student</title>
+    <link rel="stylesheet" href="{% static 'css/Student.css' %}">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <!-- top blue continer -->
+    <div class="top">
+        <div class="space_between">
+     <h5 style="color: white;margin: 0px;" id="dateDisplay"></h5>
+     <a href="logout/">logout</a>
+        </div>
+   <div class="continer1">
+    <h4>{{student.name}}</h4>
+    <div class="line">
+        <h6>Student</h6>
+        <h6>{{student.reg}}</h6>
+        <h6>{{student.classroom.department}}</h6>
+        <h6>{{student.batch}}</h6>
+        <h6>{{student.classroom}}</h6>
+        <h6>Mobile : {{student.mobile}}</h6>
+    </div>
+   </div>
+    </div>
+
+    <!-- gtn logo and quote-->
+    <img src="{% static 'images/logo2.png' %}" alt="Logo" width="150px" style="margin: 15px;">
+    <h5 style="color: darkblue;margin: 0px;margin-left: 40px;width: 80%;">“Successful people are not gifted.They  just work hard, then succeed on purpose.”</h5>
+
+    <!-- options link -->
+    <div class="card1">
+        <div class="column">
+            <img src="{% static 'images/list.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('message')">Leave letter</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/history.png' %}" alt="img" >
+            <a href="#" onclick="openModal('attendance')">Attendance History</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/edit profile.png' %}" alt="img" >
+            <a href="#" onclick="openModal('edit_profile')">Edit Profile</a>
+        </div>
+    </div>
+
+    <!-- currrent day attendance data -->
+    <h4 style=" color: darkblue; margin: 20px;">Today Attendance</h4>
+    <div class="card1">
+        <table>
+            <thead>
+                <th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th>
+            </thead>
+            <tbody>
+                <tr>
+                    {% if records %}
+                    {% for record in records %}   
+        <td><div class="custom-checkbox{% if record.hour_1_present %} checked{% endif %}" data-state="{% if record.hour_1_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_2_present %} checked{% endif %}" data-state="{% if record.hour_2_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_3_present %} checked{% endif %}" data-state="{% if record.hour_3_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_4_present %} checked{% endif %}" data-state="{% if record.hour_4_present %}True{% else %}False{% endif %}"></div></td>
+        <td><div class="custom-checkbox{% if record.hour_5_present %} checked{% endif %}" data-state="{% if record.hour_5_present %}True{% else %}False{% endif %}"></div></td>
+        {% endfor %}
+        {% else %}
+            <p style="color: red;font-size: small;">No attendance records found.</p>
+        {% endif %}            
+    </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Display number of leave and present days -->
+    <h4 style=" color: darkblue; margin: 20px;">Current Data</h4>
+    <div class="card1">
+        <div class="column" style="align-items: center;">
+        <h5>Working Day</h5>
+       <p style="color: darkblue;">{{attendance.total_working_days}}</p>
+    </div>
+        <div class="column" style="align-items: start;">
+            <h5>from</h5>
+            <p>{{working.start}}</p>
+            <p>{{working.sem}}  Semster</p>
+        </div>
+        <div class="green">
+             <h3>{{attendance.total_days}}</h3>
+        </div>
+        <div class="red">
+            <h4>{{attendance.total_leave_days}}</h4>
+        </div>
+    </div>
+
+
+    <!-- final college image -->
+    <div class="center">
+   
+    <iframe width="560" height="315" src="{% static 'images/video.mp4' %}" frameborder="0" allowfullscreen></iframe>
+</div>
+
+
+
+   <!-- pop contents -->
+
+   <!-- leave letter -->
+   <div id="message" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('message')">&times;</span>
+       <h4 style="color: darkblue;text-decoration: underline;">Leave Letter Form</h4>
+        <form method="post" action="{% url 'leave' %}" class="attendance-form">
+            {% csrf_token %}
+            <label>Staff</label>
+            <select id="staff" name="staff">
+                <option value="">Select staff</option>
+                <!-- Populate staff options dynamically from your backend -->
+                {% for staff_member in staff %}
+                    <option value="{{ staff_member.id }}">{{ staff_member.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="type">Leave Type:</label>
+            <select id="type" name="type">
+              <option value="Sick Leave">Sick Leave</option>
+              <option value="Parental Leave">Parental Leave</option>
+              <option value="Educational Leave">Educational Leave</option>
+              <option value="Religious Observance Leave">Religious Observance Leave</option>
+              <option value="Family Event Leave">Family Event Leave</option>
+          </select>
+            
+            <label for="start">Start Date:</label>
+            <input type="date" id="start" name="start">
+            
+            <label for="end">End Date:</label>
+            <input type="date" id="end" name="end">
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+
+    <!-- attendance history -->
+    <div id="attendance" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('attendance')">&times;</span>
+        <h4>Serach Attendance Record</h4>
+            <form method="get" action="{% url 'test' %}" class="attendance-form">
+                {% csrf_token %}
+                <label>Choose the Date</label>
+                <input type="date" name="date">
+                <button type="submit" class="buton">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- edit profile -->
+    <div id="edit_profile" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('edit_profile')">&times;</span>
+                  <h4>updated soon......</h4>
+        </div>
+    </div>
+
+
+   <!-- java script -->
+   <script>
+    // Function to open the modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+
+    // Function to get the day name
+function getDayName(day) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[day];
+}
+
+// Function to get the month name
+function getMonthName(month) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[month];
+}
+
+// Function to display the date in the desired format
+function displayDate() {
+    const now = new Date();
+    const dayName = getDayName(now.getDay());
+    const day = now.getDate();
+    const monthName = getMonthName(now.getMonth());
+    const year = now.getFullYear();
+
+    const formattedDate = `${dayName}, ${day} ${monthName} ${year}`;
+    document.getElementById('dateDisplay').textContent = formattedDate;
+}
+
+// Call the function to display the date
+displayDate();
+</script>
+</body>
+</html>

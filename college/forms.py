@@ -35,7 +35,7 @@ AttendanceFormSet = forms.modelformset_factory(
 class StudentForm(forms.ModelForm):
     class Meta:
         model = student_record
-        fields = ['classroom', 'reg', 'name', 'mobile', 'gender']
+        fields = ['classroom','batch', 'reg', 'name', 'mobile', 'gender']
 class ClassroomForm(forms.ModelForm):
     class Meta:
         model = classroom

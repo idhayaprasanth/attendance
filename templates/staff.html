@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff</title>
+    <link rel="stylesheet" href="{% static 'css/Staff.css' %}">
+</head>
+<body>
+    <!-- top blue continer -->
+    <div class="top">
+     <div class="space_between">
+     <h5 style="color: white;margin: 0px;" id="dateDisplay"></h5>
+     <a href="logout/">logout</a>
+        </div>
+   <div class="continer1">
+    <h4>{{staff.name}}</h4>
+    <div class="line">
+        <h6>Staff</h6>
+        <h6>{{staff.department}}</h6>
+        <h6>Assistant Professor</h6>
+    </div>
+   </div>
+    </div>
+
+    <!-- gtn logo and quote-->
+    <img src="{% static 'images/logo2.png' %}" alt="Logo" width="150px" style="margin: 15px;">
+    <h5 style="color: darkblue;margin: 0px;margin-left: 40px;width: 80%;">"The best teachers are those who show you where to look but don't tell you what to see."</h5>
+
+    <!-- display all the classroom in the department -->
+     <div id="card1">
+        {% if class %}
+        {% for cls in class %}
+        {% if cls.year == "1st" %}  <!-- Filter by year -->
+            <a href="update/{{ cls.id }}/2024-03-01" id="a"> {{ cls.year }} - {{ cls.section }} </a>
+        {% endif %}
+    {% endfor %}
+
+    {% for cls in class %}
+        {% if cls.year == "2nd" %}  <!-- Filter by year -->
+            <a href="update/{{ cls.id }}/2024-03-01" id="a"> {{ cls.year }} - {{ cls.section }} </a>
+        {% endif %}
+    {% endfor %}
+
+<!-- Display classrooms for 3rd year -->
+
+    {% for cls in class %}
+        {% if cls.year == "3rd" %}  <!-- Filter by year -->
+            <a href="update/{{ cls.id }}/2024-03-01" id="a"> {{ cls.year }} - {{ cls.section }} </a>
+        {% endif %}
+    {% endfor %}
+
+{% else %}
+<p>No classrooms available.</p>
+{% endif %}
+     </div>
+
+
+     <!-- options of icon will display here -->
+     <div class="card1">
+        <div class="column">
+            <img src="{% static 'images/megaphone.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('circular')">circular</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/postbox.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('leaveletter')">Leave Letter</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/search.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('attendance')">Search Attendance</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/list.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('staff_list')">Staff List</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/edit profile.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('edit')">Edit Profile</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/search_client.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('student')">Search Student</a>
+        </div>
+     </div>
+  <!-- video about the college -->
+     <div class="center">
+        <iframe width="560" height="315" src="{% static 'images/video.mp4' %}" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+
+    <!-- popup contents  -->
+
+    <div id="circular" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('circular')">&times;</span>
+         <h4>circulars</h4>
+         {% for circular in circular reversed %}
+         <div class="circular">
+             <h5 style="text-align:end ;">{{circular.created}}</h5>
+             {% if circular.image %}
+                 <img src="{{ circular.image.url }}" width="100%">
+                 <a href="{{ circular.image.url }}" download="circular_image.jpg">
+                     <button >Download Image</button>
+                 </a>
+             {% endif %}
+             <p style="color: gray;">{{ circular.message }}</p>
+         </div>
+     {% endfor %}
+
+        </div>
+    </div>
+
+    <div id="leaveletter" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('leaveletter')">&times;</span>
+         <h4>Leave Letters</h4>
+         {% for leave in leave reversed%}
+         {% for student in student%}
+         {% if student.user == leave.user %}
+         <div class="leave_card">
+         <h5>Received : {{leave.created}}</h5>
+       
+             <h4 style="color: green;"> {{student.name}}</h4>
+             <h6>{{student.reg}}</h6>
+         
+         <h6> {{student.classroom}}</h6>
+         <h6>{{student.mobile}}</h6>
+         <div class="line">
+         <h6> {{leave.type}}</h6>
+         <h6> {{leave.start}}--- To ---{{leave.end}}</h6>
+     </div>
+          <p> {{leave.message}}</p>
+     </div>
+         {% endif%}
+         {% endfor%}
+         {% endfor%}
+       
+        </div>
+    </div>
+
+
+    <div id="attendance" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('attendance')">&times;</span>
+        <h4>Search Attendance</h4>
+        <form action="attendance_record" method="post" class="attendance-form">
+            <select name="classroom_id" class="classroom-select">
+                {% for cls in class %}
+                    <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                        {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="date" name="dates" id="dates" class="date-input">
+            {% csrf_token %}
+            <button type="submit" class="submit-button">Search</button>
+        </form>
+        </div>
+    </div>
+
+
+    <div id="student" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('student')">&times;</span>
+         <h4>Search Students</h4>
+         <form action="search_student" method="post" class="attendance-form">
+             <select name="classroom_id" class="classroom-select">
+                 {% for cls in class %}
+                     <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                         {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                     </option>
+                 {% endfor %}
+             </select>
+             <input type="text" name="reg"  class="date-input" placeholder="Register No">
+             {% csrf_token %}
+             <button type="submit" class="submit-button">Search</button>
+         </form>
+         <p style="color: red;font-size: x-small;">*type 'all' in register number input to see all the students in selected classroom</p>
+
+        </div>
+    </div>
+
+
+    <div id="staff_list" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('staff_list')">&times;</span>
+             <h4>Staff List</h4>
+             <ul>
+                {% for staff_member in staffs %}
+                    <li>{{ staff_member.name }} -- {{staff_member.mobile}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div id="edit" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('edit')">&times;</span>
+         <h4>Edit details</h4>
+        </div>
+    </div>
+
+
+    <!-- java script -->
+   <script>
+    // Function to open the modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+
+    // Function to get the day name
+function getDayName(day) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[day];
+}
+
+// Function to get the month name
+function getMonthName(month) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[month];
+}
+
+// Function to display the date in the desired format
+function displayDate() {
+    const now = new Date();
+    const dayName = getDayName(now.getDay());
+    const day = now.getDate();
+    const monthName = getMonthName(now.getMonth());
+    const year = now.getFullYear();
+
+    const formattedDate = `${dayName}, ${day} ${monthName} ${year}`;
+    document.getElementById('dateDisplay').textContent = formattedDate;
+}
+
+// Call the function to display the date
+displayDate();
+</script>
+    </body>
+    </html>

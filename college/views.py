@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import DepartmentForm,CircularForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from college.models import Request,student_record,department,attendance,classroom,staff,Iot,leave_letter,Circular
+from college.models import  workingday,Request,student_record,department,attendance,classroom,staff,Iot,leave_letter,Circular
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import JsonResponse
@@ -42,13 +42,45 @@ def index(request):
             students = student_record.objects.get(user=request.user)
             staffs = staff.objects.filter(department=students.classroom.department)
             today_date = datetime.date.today()
-            attendance_records = attendance.objects.filter(student=students, date="2024-03-01")
-            return render(request, 'student_landing.html', {'welcome_student': True, 'student': students, 'attendance_records': attendance_records,'staff':staffs})
+            attendance_records = attendance.objects.filter(student=students, date=today_date)
+            working_queryset = workingday.objects.filter(batch=students.batch, start__lte=today_date)
+
+            if working_queryset.exists():
+                # Get the nearest start date by ordering the queryset in descending order
+                working_instance = working_queryset.order_by('-start').first()
+                
+                # Assuming there's only one instance per batch
+                present = attendance.objects.filter(
+                    student=students,
+                    date__range=[working_instance.start, working_instance.end]
+                )
+                total_working_days = working_instance.workingday
+                total_present_days = 0
+                total_leave_days = 0
+                for record in present:
+                    if record.present == 'Full Day':
+                        total_present_days += 1
+                    elif record.present == 'Half Day':
+                        total_present_days += 0.5
+                    elif record.present == 'Leave':
+                        total_leave_days += 1
+                total_days = total_present_days + total_leave_days
+                percentage_present = (total_present_days / total_working_days) * 100
+                context = {
+                    'percentage_present': percentage_present,
+                    'total_leave_days': total_leave_days,
+                    'total_days': total_days,
+                    'total_working_days': total_working_days
+                }
+
+            return render(request, 'student.html', {'welcome_student': True,'working':working_instance,'attendance':context, 'student': students, 'records': attendance_records,'staff':staffs})
         elif department.objects.filter(user=request.user).exists():
             department_obj = department.objects.get(user=request.user)
+            classrooms = classroom.objects.filter(department=department_obj)
+            staffs = staff.objects.filter(department=department_obj)
             pending_requests = Request.objects.filter(status='pending')
             pending_request_count = request.user.received_requests.filter(status='pending').count()
-            return render(request, 'hod_landing.html', {'hod': True, 'department_obj': department_obj, 'pending_request_count': pending_request_count, 'requests': pending_requests})
+            return render(request, 'hod.html', {'hod': True,'class': classrooms, 'department_obj': department_obj, 'pending_request_count': pending_request_count, 'requests': pending_requests,'staff':staffs})
         elif Request.objects.filter(sender=request.user, status='accepted').exists():
             staff_with_accepted_request = Request.objects.filter(sender=request.user, status='accepted')
             classrooms = None 
@@ -64,14 +96,14 @@ def index(request):
                     
                 leave = leave_letter.objects.filter(staff=staff_obj)
                 circular = Circular.objects.filter(department = staff_obj.department)
-              
+                staffs = staff.objects.filter(department=staff_obj.department)
                 
                 
 
             except staff.DoesNotExist:
                 pass  # Handle the case when no staff object is found
             
-            return render(request, 'staff_landing.html', {'staff_with_accepted_request': staff_with_accepted_request, 'class': classrooms,'leave':leave,'student':student,'circular':circular})
+            return render(request, 'staff.html', {'staff':staff_obj,'staff_with_accepted_request': staff_with_accepted_request, 'class': classrooms,'leave':leave,'student':student,'circular':circular,'staffs':staffs})
         else:
             return render(request, 'index.html')
     else:

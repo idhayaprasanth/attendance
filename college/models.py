@@ -16,7 +16,7 @@ class staff(models.Model):
     department = models.ForeignKey(department,on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
     qualification = models.CharField(max_length=100)
-    mobile = models.IntegerField()
+    mobile = models.IntegerField(unique=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return f" {self.department.name} - {self.name}"
@@ -52,17 +52,33 @@ class classroom(models.Model):
     subject9 = models.CharField(max_length=100,null=True)
 
     def __str__(self):
-        return f" {self.id}- {self.year} -{self.section}-{self.department}"
+        return f"  {self.year} -{self.section}-{self.department}"
+    
+
+class batch(models.Model):
+    start = models.DateField()
+    end = models.DateField()
+
+    @property
+    def years(self):
+        return (self.start.year, self.end.year)
+    
+    def __str__(self):
+        return f"  {self.start.year} -{self.end.year}"
+    
+
 class student_record(models.Model):  
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    batch = models.ForeignKey(batch,on_delete=models.CASCADE,null=True)
     classroom = models.ForeignKey(classroom,on_delete=models.CASCADE)
     reg = models.SlugField(max_length=20,unique=True)
     name=models.CharField(max_length=100)
-    mobile = models.IntegerField()
+    mobile = models.IntegerField(unique=True)
     gender_choice = [
         ("male","male"),("female","female"),
     ]
     gender = models.CharField(max_length=6,choices=gender_choice,null=True)
+    
 
 
     def __str__(self):
@@ -137,6 +153,26 @@ class Circular(models.Model):
     image = models.ImageField(blank=True)
     message = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+
+
+class workingday(models.Model):
+    batch = models.ForeignKey(batch,on_delete=models.CASCADE)
+    STATUS_CHOICES = [
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
+        ('6', '6'),
+       
+    ]
+    sem = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    workingday = models.IntegerField()
+    start = models.DateField()
+    end = models.DateField(null=True)
+
+    
 
 class Iot (models.Model):
     data= models.IntegerField()

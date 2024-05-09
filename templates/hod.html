@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/hod.css' %}">
+</head>
+<body>
+      <!-- top blue continer -->
+      <div class="top">
+        <div class="space_between">
+        <h5 style="color: white;margin: 0px;" id="dateDisplay"></h5>
+        <a href="logout/">logout</a>
+           </div>
+      <div class="continer1">
+       <h4>{{department_obj.user}}</h4>
+       <div class="line">
+           <h6>Hod </h6>
+           <h6>{{department_obj.name}}</h6>
+           <h6>Assistant Professor</h6>
+       </div>
+      </div>
+       </div>
+   
+       <!-- gtn logo and quote-->
+       <img src="{% static 'images/logo2.png' %}" alt="Logo" width="150px" style="margin: 15px;">
+       <h5 style="color: darkblue;margin: 0px;margin-left: 40px;width: 80%;">"Leadership is the capacity to translate vision into reality."</h5>
+
+      <div class="card1">
+        <div class="column">
+            <img src="{% static 'images/create.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('create_circular')">create circular</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/id.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('staff_requests')">Staff Requests</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/megaphone.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('circular')">circular</a>
+        </div>
+      
+        <div class="column">
+            <img src="{% static 'images/search.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('attendance')">Search Attendance</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/search_client.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('student')">Search Student</a>
+        </div>
+        <div class="column">
+            <img src="{% static 'images/list.png' %}" alt="img" width="30px">
+            <a href="#" onclick="openModal('staff_list')">Staff List</a>
+        </div>
+      </div>
+      <div class="center">
+        <iframe width="560" height="315" src="{% static 'images/video.mp4' %}" frameborder="0" allowfullscreen></iframe>
+    </div>
+  <!-- popup contents  -->
+
+    <div id="create_circular" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('create_circular')">&times;</span>
+            <h4>create circular</h4>
+            <form id="your-form-id" action="create_circular" method="post" onsubmit="createCircular(); return false;">
+                {% csrf_token %}
+                <input type="file" name = image style="margin-bottom: 6px;"  >
+               <textarea name="message" style="height: 200px; width: 80%;" placeholder="enter the content"></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="staff_requests" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('staff_requests')">&times;</span>
+         <h4>Requests</h4>
+         {% for request in user.received_requests.all %}
+         {% if request.status == 'pending' %}
+                
+                
+                     <h5 style="margin-bottom:0px ;">{{ request.staff.name }}</h5>
+                     <a href="{% url 'accept_request' request_id=request.id %}" id="accept">Accept</a>
+                     <a href="{% url 'decline_request' request_id=request.id %}" id="decline">Decline</a>
+                 
+             
+         {% endif %}
+         {% endfor %}
+        </div>
+    </div>
+
+    <div id="circular" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('circular')">&times;</span>
+         <h4>circulars</h4>
+        </div>
+    </div>
+
+
+    <div id="attendance" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('attendance')">&times;</span>
+        <h4>Search Attendance</h4>
+        <form action="attendance_record" method="post" class="attendance-form">
+            <select name="classroom_id" class="select">
+                {% for cls in class %}
+                    <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                        {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="date" name="dates" id="dates" class="date">
+            {% csrf_token %}
+            <button type="submit" class="submit-button">Search</button>
+        </form>
+       
+        </div>
+    </div>
+
+
+    <div id="student" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('student')">&times;</span>
+         <h4>Search Students</h4>
+         <form action="search_student" method="post" class="attendance-form">
+            <select name="classroom_id" class="classroom-select">
+                {% for cls in class %}
+                    <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                        {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="text" name="reg"  class="date-input" placeholder="Register No">
+            {% csrf_token %}
+            <button type="submit" class="submit-button">Search</button>
+        </form>
+        <p style="color: red;font-size: x-small;">*type 'all' in register number input to see all the students in selected classroom</p>
+
+        </div>
+    </div>
+
+
+    <div id="staff_list" class="modal" >
+        <div class="modal-content" id="staff">
+            <span class="close" onclick="closeModal('staff_list')">&times;</span>
+            <h4>Staff List</h4>
+            <ul>
+                {% for staff_member in staff %}
+                    <li>
+                        <p style="font-weight:bold ;font-size: small;">{{ staff_member.name }}</p>
+                        <p style="font-size: small;">{{ staff_member.mobile }}</p>  
+                        <form method="post" action="{% url 'delete_staff' staff_member.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background-color: white;color: red;">Remove</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+
+    <!-- java script -->
+   <script>
+    // Function to open the modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+
+
+    // Function to get the day name
+function getDayName(day) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[day];
+}
+
+// Function to get the month name
+function getMonthName(month) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[month];
+}
+
+// Function to display the date in the desired format
+function displayDate() {
+    const now = new Date();
+    const dayName = getDayName(now.getDay());
+    const day = now.getDate();
+    const monthName = getMonthName(now.getMonth());
+    const year = now.getFullYear();
+
+    const formattedDate = `${dayName}, ${day} ${monthName} ${year}`;
+    document.getElementById('dateDisplay').textContent = formattedDate;
+}
+
+// Call the function to display the date
+displayDate();
+</script>
+    </body>
+</html>
