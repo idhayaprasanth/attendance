@@ -18,6 +18,8 @@
         <form method="post">
             {% csrf_token %}
             <input type="text" placeholder="User-Name" name="username" required style="margin-left: 4px;">
+            <input type="email" placeholder="Email" name="email" required>
+            <input type="text" placeholder="Mobile Number" name="mobile_number" required>
             <span>
                 <input type="password" placeholder="Password" name="password1" id="password" required>
                 <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password')"></i>
@@ -27,6 +29,8 @@
                 <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password2')"></i>
             </span>
             <span id="password-error" class="error-message"></span>
+            <span style="color: red;font-size: small;">{{ form.errors.username }}</span>
+            <span style="color: red;font-size: small;">{{ form.errors.mobile_number }}</span>
             <button type="submit">Sign up</button>
         </form>
        

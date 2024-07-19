@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+    <button id="start-scan">Start QR Code Scanner</button>
+    <div id="reader" style="width: 100%; display: none;"></div>
+    <p id="result"></p>
+    <p id="error-message" style="color: red;"></p>
+
+    <script>
+        document.getElementById('start-scan').addEventListener('click', function() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                // Ask for camera permission
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        // Permission granted, show the scanner
+                        document.getElementById('reader').style.display = 'block';
+                        document.getElementById('error-message').innerText = ''; // Clear any previous error messages
+                        startScanner();
+                    })
+                    .catch(function(err) {
+                        // Permission denied or error occurred
+                        console.error('Error accessing camera: ', err);
+                        document.getElementById('error-message').innerText = `Error accessing camera: ${err.name} - ${err.message}`;
+                    });
+            } else {
+                document.getElementById('error-message').innerText = 'getUserMedia is not supported by your browser.';
+            }
+        });
+
+        function startScanner() {
+            function onScanSuccess(decodedText, decodedResult) {
+                // Handle the decoded text
+                console.log(`Code matched = ${decodedText}`, decodedResult);
+                // Display the result on the web page
+                document.getElementById('result').innerText = `Decoded text: ${decodedText}`;
+            }
+
+            function onScanFailure(error) {
+                // Handle scan failure, usually better to ignore and keep scanning.
+                console.warn(`Code scan error = ${error}`);
+            }
+
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+    </script>
+</body>
+</html>

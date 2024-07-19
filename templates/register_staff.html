@@ -11,7 +11,8 @@
     <div class="nav">
         <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
     </div>
-    <form method="post">
+    <div class="container">
+    <form method="post" class="attendance-form">
         {% csrf_token %}
         <div class="form-group">
             {{ form.department.label_tag }}
@@ -31,5 +32,6 @@
         </div>
         <button type="submit" class="btn-submit">Submit</button>
     </form>
+</div>
 </body>
 </html>

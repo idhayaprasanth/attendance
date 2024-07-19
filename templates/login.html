@@ -17,7 +17,7 @@
 
     <div class="container">
         <img src="{% static 'images/logo1.png' %}" alt="Logo" class="logo">
-        <h4>Login in to continue</h4>
+        <h4>Login to continue</h4>
         <form method="post">
             <input type="text" placeholder="Username" name="username" required style="margin-left: 4px;">
             <span>
@@ -25,10 +25,13 @@
                 <i class="bi bi-eye-slash" id="togglePassword"></i>
             </span>
             {% csrf_token %}
+            {% if error_message %}
+            <p style="font-size: x-small;color: red;">{{ error_message }}</p>
+              {% endif %}
             <button type="submit">Login</button>
         </form>
     
-
+         <a href="{% url 'password_reset' %}" style="text-decoration: none;color: dodgerblue;margin-top: 50px;font-size: small;padding-top: 10px;">forgot password</a>
         <p class="register-link">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
     </div>
     

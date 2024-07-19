@@ -1,0 +1,146 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Students Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0px;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: rgb(152, 208, 243);
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px groove gainsboro;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .present {
+            color: green;
+        }
+        .absent {
+            color: red;
+        }
+        @media only screen and (max-width: 600px) {
+            .logo {
+                width: 150px;
+            }
+            .btn {
+                padding: 4px 14px;
+                margin: 5px;
+                font-size: 14px;
+            }
+            th{
+                font-size: small;
+            }
+        }
+        @media print {
+            table {
+                page-break-after: always; /* Add page break after each table */
+            }
+            h5 {
+                page-break-before: always; /* Ensure headings start on a new page */
+            }
+            .no-break {
+                page-break-after: avoid; /* Prevent page break for the header section */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="center no-break">
+        <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
+        <h4 style="font-size: small;color: grey;">G.T. N. Arts College,
+            (Autonomous)
+            Affiliated to Madurai Kamaraj University
+            Accredited by NAAC with 'A++' Grade
+            Karur Road,
+            Dindigul - 624 005</h4>
+    </div>
+
+    {% if attendance_data %}
+        <h4 class="no-break">Attendance Summary: <br>
+            <span style="color: darkblue;">
+                {{ classroom.department }} - {{ classroom.year }} - {{ classroom.section }} <br> Semester: {{ attendance_data.0.sem }}
+            </span>
+        </h4>
+        <button class="btn" onclick="printrecord()">Print</button>
+
+        {% regroup attendance_data by date as grouped_attendance %}
+        {% for date_group in grouped_attendance %}
+            <h5>Date: {{ date_group.grouper }}</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Registration Number</th>
+                        <th>Hour 1</th>
+                        <th>Hour 2</th>
+                        <th>Hour 3</th>
+                        <th>Hour 4</th>
+                        <th>Hour 5</th>
+                        <th>Attendance Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in date_group.list %}
+                        <tr>
+                            <td>{{ student.student.name|upper }}</td>
+                            <td>{{ student.student.reg|upper }}</td>
+                            <td class="{% if student.hour_1_present %}present{% else %}absent{% endif %}">
+                                {{ student.hour_1_present|yesno:"Present,Absent" }}
+                            </td>
+                            <td class="{% if student.hour_2_present %}present{% else %}absent{% endif %}">
+                                {{ student.hour_2_present|yesno:"Present,Absent" }}
+                            </td>
+                            <td class="{% if student.hour_3_present %}present{% else %}absent{% endif %}">
+                                {{ student.hour_3_present|yesno:"Present,Absent" }}
+                            </td>
+                            <td class="{% if student.hour_4_present %}present{% else %}absent{% endif %}">
+                                {{ student.hour_4_present|yesno:"Present,Absent" }}
+                            </td>
+                            <td class="{% if student.hour_5_present %}present{% else %}absent{% endif %}">
+                                {{ student.hour_5_present|yesno:"Present,Absent" }}
+                            </td>
+                            <td>{{ student.present }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    
+    
+    <script>
+        function printrecord() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

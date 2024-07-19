@@ -2,12 +2,26 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    mobile_number = models.CharField(max_length=15, blank=True, null=True)
+    email = models.EmailField()
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
 
 
 
 class department(models.Model):
     name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -98,8 +112,9 @@ class attendance(models.Model):
         ('Half Day', 'Half Day'),
         ('Leave', 'Leave'),
     ]
-    
     present = models.CharField(max_length=8,default='Leave', choices=PRESENT_CHOICES, null=True)
+    batch = models.ForeignKey(batch, on_delete=models.CASCADE, default=1)  # Set a default value here
+    sem = models.CharField(max_length=1, default=1)
 
     def calculate_present_status(self):
         if self.hour_1_present and self.hour_2_present and self.hour_3_present and self.hour_4_present and self.hour_5_present:
@@ -146,6 +161,7 @@ class leave_letter(models.Model):
     end = models.DateField()
     message = models.TextField(blank = False)
     created = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
 
 class Circular(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -168,6 +184,10 @@ class workingday(models.Model):
        
     ]
     sem = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    year_choice = [
+        ('1st', '1st'),('2nd','2nd'),('3rd','3rd'),
+    ]
+    year=models.CharField(max_length=3,choices=year_choice,default=1)
     workingday = models.IntegerField()
     start = models.DateField()
     end = models.DateField(null=True)

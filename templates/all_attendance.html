@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Records</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 80px;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: rgb(152, 208, 243);
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px groove gainsboro;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 70px;
+        }
+        .row p {
+            color: darkblue;
+            font-weight: bold;
+        }
+        h4{
+            padding: 0px;
+            margin: 0px;
+            color: green;
+        }
+
+        .detail{
+            margin: 40px 20px;
+            padding: 10px;
+            width: 150px;
+            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        }
+        .present {
+    color: green;
+}
+
+.absent {
+    color: red;
+}
+
+        @media only screen and (max-width: 600px) {
+            .logo {
+                width: 150px;
+            }
+            .btn {
+                padding: 4px 14px;
+                margin: 5px;
+                font-size: 14px;
+            }
+            .row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 40px;
+        }
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
+        <h5 style="font-size: small; color: grey;">G.T. N. Arts College,
+            (Autonomous)
+            Affiliated to Madurai Kamaraj University
+            Accredited by NAAC with 'A++' Grade
+            Karur Road,
+            Dindigul - 624 005
+        </h5>
+    </div>
+    
+    </div>
+    {% if context %}
+    <div class="detail">
+        <h4>{{student.name}}</h4>
+        <h5>{{student.reg}}</h5>
+        <h5>{{student.classroom.department}}</h5>
+    </div>
+        <!-- Loop through each semester's data -->
+        {% for sem, data in context.items %}
+            {% if data %}
+                <h4>SEMESTER : {{ sem|slice:"3:" }}</h4>
+                <div class="row">
+                    <p>Working Days: {{ data.total_working_days }}</p>
+                    <p>Present Days: {{ data.total_present_days }}</p>
+                    <p>Leave Days: {{ data.total_leave_days }}</p>
+                    <p>Percentage: {{ data.percentage_present }}%</p>
+                    </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DATE</th>
+                            <th>HOUR 1</th>
+                            <th>HOUR 2</th>
+                            <th>HOUR 3</th>
+                            <th>HOUR 4</th>
+                            <th>HOUR 5</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attendance in data.sem_records %}
+    <tr>
+        <td>{{ attendance.date }}</td>
+        <td class="{{ attendance.hour_1_present|yesno:'present,absent' }}">{{ attendance.hour_1_present|yesno:'Present,Absent' }}</td>
+        <td class="{{ attendance.hour_2_present|yesno:'present,absent' }}">{{ attendance.hour_2_present|yesno:'Present,Absent' }}</td>
+        <td class="{{ attendance.hour_3_present|yesno:'present,absent' }}">{{ attendance.hour_3_present|yesno:'Present,Absent' }}</td>
+        <td class="{{ attendance.hour_4_present|yesno:'present,absent' }}">{{ attendance.hour_4_present|yesno:'Present,Absent' }}</td>
+        <td class="{{ attendance.hour_5_present|yesno:'present,absent' }}">{{ attendance.hour_5_present|yesno:'Present,Absent' }}</td>
+        <td class="{{ attendance.present|yesno:'present,absent' }}">{{attendance.present}}</td>
+    </tr>
+{% endfor %}
+                    </tbody>
+                </table>
+                
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center; color: red;">No attendance records found for any semester.</p>
+    {% endif %}
+
+    <button class="btn" onclick="printrecord()">Print</button>
+    <script>
+        function printrecord() {
+            window.print();
+        }
+
+    </script>
+</body>
+</html>

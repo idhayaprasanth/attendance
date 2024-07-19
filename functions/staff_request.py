@@ -14,8 +14,7 @@ def register_staff(request):
     # Check if the user already has a staff instance
     existing_staff_instance = staff.objects.filter(created_by=request.user).first()
     if existing_staff_instance:
-        messages.error(request, 'You have already created a staff instance.')
-        return redirect('index')
+        return redirect('login')
     
     if request.method == 'POST':
         form = StaffForm(request.POST)
@@ -68,6 +67,5 @@ def delete_staff(request, staff_id):
     
     if request.method == 'POST':
         staff_instance.delete()
-        return redirect('staff_list')  # Redirect to a view that lists all staff
+        return redirect('index')  # Redirect to a view that lists all staff
     
-    return render(request, 'delete_staff_confirm.html', {'staff': staff_instance})

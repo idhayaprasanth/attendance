@@ -2,10 +2,12 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from .models import department,staff,classroom,student_record,attendance,leave_letter,Circular
+from .models import department,staff,classroom,student_record,attendance,leave_letter,Circular,Profile
 from django.utils import timezone
 from django.forms import formset_factory
 from django.forms import modelformset_factory
+from django.contrib.auth.forms import UserCreationForm
+
 
 
 class CircularForm(forms.ModelForm):
@@ -63,3 +65,29 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'password', 'email']
+class CustomUserCreationForm(UserCreationForm):
+    mobile_number = forms.CharField(max_length=15)
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'mobile_number']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("This username is already taken.")
+        return username
+
+    def clean_mobile_number(self):
+        mobile_number = self.cleaned_data.get('mobile_number')
+        if Profile.objects.filter(mobile_number=mobile_number).exists():
+            raise forms.ValidationError("This mobile number is already registered.")
+        return mobile_number
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data

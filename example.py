@@ -1,5 +1,10 @@
 from pyngrok import ngrok
 import time
+import os
+from pyngrok import ngrok
+
+os.environ["NGROK_PATH"] = "C:\\path\\to\\ngrok.exe"
+ngrok.set_auth_token("2duL8cK7vAI45HlSNp8EJWsa2ZS_5yVSyfi2dDsE1YbzbtZmY")
 
 # Set the ngrok authentication token
 ngrok.set_auth_token("2duL8cK7vAI45HlSNp8EJWsa2ZS_5yVSyfi2dDsE1YbzbtZmY")

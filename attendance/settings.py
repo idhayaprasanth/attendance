@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-e0(wm@^8t@$xk8fhr)ux2au$_g-hg=!_@_+rf06m#v-2=2#&j&
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.155.209','192.168.33.104']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.155.209','192.168.33.104','69fd-42-106-94-171.ngrok-free.app']
 #meia root 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -129,3 +129,15 @@ STATIC_ROOT = '/path/to/your/static/files'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# SMTP Configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'idhayaprasanth56@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'tqwkchqwpqywnput'
+

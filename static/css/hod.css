@@ -163,6 +163,7 @@ input {
     border-radius: 4px;
     background-color: #E4EDFC;
     margin-bottom: 4px;
+    color: green;
     
 }
 select{
@@ -171,6 +172,7 @@ select{
     border-radius: 4px;
     background-color: #E4EDFC;
     margin-bottom: 4px;
+    color: green;
 
 }
 textarea{
@@ -178,6 +180,7 @@ textarea{
     border-radius: 4px;
     background-color: #E4EDFC;
     margin-bottom: 15px;
+    color: green;
 }
 label{
   font-weight: bold;
@@ -186,6 +189,7 @@ label{
 }
 input[type="date"]{
     margin: 15px 0;
+    color: green;
 }
 .buton{
 margin: 10px 0px;
@@ -214,4 +218,18 @@ li{
 }
 #staff{
     background-color: #E4EDFC;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .card1 {
+        display: flex;
+        flex-wrap: wrap; /* Allow wrapping of items */
+        justify-content: space-between; /* Space out items */
+    }
+
+    .column {
+        flex-basis: calc(33.333% - 10px); /* Adjust for 3 items per row */
+        margin: 5px; /* Optional: Adds spacing between items */
+    }
 }

@@ -158,6 +158,7 @@ input {
     padding: 4px;
     border-radius: 4px;
     background-color: #E4EDFC;
+    color: green;
     
 }
 select{
@@ -166,6 +167,7 @@ select{
     border-radius: 4px;
     background-color: #E4EDFC;
     margin-bottom: 4px;
+    color: green;
 
 }
 textarea{
@@ -173,6 +175,8 @@ textarea{
     border-radius: 4px;
     background-color: #E4EDFC;
     margin-bottom: 15px;
+    color: green;
+    font-size: smaller;
 }
 label{
   font-weight: bold;
@@ -181,6 +185,7 @@ label{
 }
 input[type="date"]{
     margin: 15px 0;
+    color: green;
 }
 .buton{
 margin: 10px 0px;

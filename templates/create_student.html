@@ -11,15 +11,15 @@
    <div class="nav">
     <img src="{% static 'images/logo2.png' %}" alt="Logo" class="logo">
 </div>
-
-    <form method="post">
+<div class="container">
+    <form method="post" class="attendance-form ">
         {% csrf_token %}
         <div class="form-group">
             {{ form.classroom.label_tag }}
             {{ form.classroom }}
         </div>
         <div class="form-group">
-            {{ form.reg.label_tag }}
+               {{ form.reg.label_tag }}
             {{ form.reg }}
         </div>
         <div class="form-group">
@@ -27,7 +27,7 @@
             {{ form.batch }}
         </div>
         <div class="form-group">
-            {{ form.name.label_tag }}
+         {{ form.name.label_tag }}
             {{ form.name }}
         </div>
         <div class="form-group">
@@ -40,5 +40,5 @@
         </div>
         <button type="submit" class="btn-save">Save</button>
     </form>
-</body>
+</div>
 </html>

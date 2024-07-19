@@ -3,8 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: radial-gradient(circle at center center, rgba(217, 217, 217,0.05) 0%, rgba(217, 217, 217,0.05) 15%,rgba(197, 197, 197,0.05) 15%, rgba(197, 197, 197,0.05) 34%,rgba(178, 178, 178,0.05) 34%, rgba(178, 178, 178,0.05) 51%,rgba(237, 237, 237,0.05) 51%, rgba(237, 237, 237,0.05) 75%,rgba(138, 138, 138,0.05) 75%, rgba(138, 138, 138,0.05) 89%,rgba(158, 158, 158,0.05) 89%, rgba(158, 158, 158,0.05) 100%),radial-gradient(circle at center center, rgb(255,255,255) 0%, rgb(255,255,255) 6%,rgb(255,255,255) 6%, rgb(255,255,255) 12%,rgb(255,255,255) 12%, rgb(255,255,255) 31%,rgb(255,255,255) 31%, rgb(255,255,255) 92%,rgb(255,255,255) 92%, rgb(255,255,255) 97%,rgb(255,255,255) 97%, rgb(255,255,255) 100%);
-    background-size: 42px 42px;
+    background-color: #E4EDFC;
     padding: 20px;
 }
 
@@ -12,55 +11,80 @@ h2 {
     text-align: center;
     margin-top: 50px;
     margin-bottom: 20px;
+    
 }
 
-form {
-    max-width: 500px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
 .form-group {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+
+}
+.container {
+    margin: auto;
+    width: 50%;
+    
 }
 
-label {
-    display: block;
-    font-weight: bold;
-    color: darkblue;
-    margin-bottom: 5px; /* Space between label and input */
+.attendance-form {
+    max-width: 250px; /* Adjust as needed */
+    margin: 0 auto;
+    padding: 15px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 6px;
+    margin-top: 15px;
+   /* Ensure content wraps to new line when there's not enough space */
+  
 }
 
-input[type="text"],
-input[type="number"],
-select {
-    width: 100%; /* Full width */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.btn-submit {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
+input {
+    width: 200px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #E4EDFC;
+    margin-left: 15px;
+    color: green;
+    
+}
+select{
+    width: 200px;
+    margin-left: 15px;
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #E4EDFC;
+    margin-bottom: 4px;
+
+}
+
+label{
+  font-weight: bold;
+  font-size: small;
+  margin: 6px 0px;
+}
+
+button{
+    background-color: darkblue;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    padding: 4px;
+    width: 100px;
     font-weight: bold;
 }
+
+
+
 .nav{
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
     margin-top: 30px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 .nav a{
     width: 40px;
@@ -83,6 +107,9 @@ select {
   
    
     .nav img{
-        width: 200px;
+        width: 150px;
+    }
+    .container{
+        width: 100%;
     }
 }

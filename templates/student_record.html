@@ -82,6 +82,7 @@
                     <th>Classroom</th>
                     <th>Mobile</th>
                     <th>Gender</th>
+                    <th>Attendance</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,11 +93,17 @@
                         <td>{{ single_student.classroom }}</td>
                         <td>{{ single_student.mobile }}</td>
                         <td>{{ single_student.gender }}</td>
+                        <td>  <form action="{% url 'all_attendance' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ single_student.reg }}">
+                            <button class="btn">View Attendance</button>
+                        </form></td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
             </tbody>
         </table>
-    
+      
+      
     {% endif %}
     
     {% if students_attendance %}
@@ -128,6 +135,9 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+   
+    
+    
     <button class="btn" onclick="printrecord()">Print</button>
     <script>
         function printrecord() {

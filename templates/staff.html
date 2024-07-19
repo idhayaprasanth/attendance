@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/Staff.css' %}">
 </head>
 <body>
+    {% if staff%}
     <!-- top blue continer -->
     <div class="top">
      <div class="space_between">
@@ -33,13 +34,13 @@
         {% if class %}
         {% for cls in class %}
         {% if cls.year == "1st" %}  <!-- Filter by year -->
-            <a href="update/{{ cls.id }}/2024-03-01" id="a"> {{ cls.year }} - {{ cls.section }} </a>
+            <a href="update/{{ cls.id }}/{{date}}" id="a"> {{ cls.year }} - {{ cls.section }} </a>
         {% endif %}
     {% endfor %}
 
     {% for cls in class %}
         {% if cls.year == "2nd" %}  <!-- Filter by year -->
-            <a href="update/{{ cls.id }}/2024-03-01" id="a"> {{ cls.year }} - {{ cls.section }} </a>
+            <a href="update/{{ cls.id }}/{{date}}" id="a"> {{ cls.year }} - {{ cls.section }} </a>
         {% endif %}
     {% endfor %}
 
@@ -47,7 +48,7 @@
 
     {% for cls in class %}
         {% if cls.year == "3rd" %}  <!-- Filter by year -->
-            <a href="update/{{ cls.id }}/2024-03-01" id="a"> {{ cls.year }} - {{ cls.section }} </a>
+            <a href="update/{{ cls.id }}/{{date}}" id="a"> {{ cls.year }} - {{ cls.section }} </a>
         {% endif %}
     {% endfor %}
 
@@ -64,8 +65,19 @@
             <a href="#" onclick="openModal('circular')">circular</a>
         </div>
         <div class="column">
+            {% if unseen %}
+            <div class="postbox-container">
+                <img src="{% static 'images/postbox.png' %}" alt="img" width="30px">
+                <span id="redDot" class="red-dot"></span>
+            </div>            
+            <a href="#" onclick="openModal('leaveletter')">Leave Letter </a>
+
+            {% else %}
             <img src="{% static 'images/postbox.png' %}" alt="img" width="30px">
             <a href="#" onclick="openModal('leaveletter')">Leave Letter</a>
+
+            {% endif %}
+
         </div>
         <div class="column">
             <img src="{% static 'images/search.png' %}" alt="img" width="30px">
@@ -132,6 +144,15 @@
          <h6> {{leave.start}}--- To ---{{leave.end}}</h6>
      </div>
           <p> {{leave.message}}</p>
+          {% if leave.seen %}
+        <p id="seen">Seen</p>
+          {% else %}
+        <p id="unseen">unSeen</p>
+        <form method="post" action="/mark_leave_letter_as_seen/">
+            <!-- form fields -->
+            <button type="submit">Mark as Seen</button>
+        </form>
+         {% endif %}
      </div>
          {% endif%}
          {% endfor%}
@@ -149,14 +170,80 @@
             <select name="classroom_id" class="classroom-select">
                 {% for cls in class %}
                     <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
-                        {{ cls.year }} - {{ cls.section }} - {{ cls.subject }}
+                        {% if cls.year == "1st" %} 
+                        {{ cls.year }} - {{ cls.section }} 
+                        {% endif %}
+                       
+                        {% if cls.year == "2nd" %} 
+                        {{ cls.year }} - {{ cls.section }} 
+                        {% endif %}
+                        
+                        {% if cls.year == "3rd" %} 
+                        {{ cls.year }} - {{ cls.section }} 
+                        {% endif %}
+                        {% endfor %}
+
                     </option>
-                {% endfor %}
+                
             </select>
             <input type="date" name="dates" id="dates" class="date-input">
             {% csrf_token %}
             <button type="submit" class="submit-button">Search</button>
         </form>
+
+        <h4>Download All Attendance</h4>
+        <form action="all_student_attendance" method="post" class="attendance-form">
+            <select name="classroom_id" class="classroom-select">
+                {% for cls in class %}
+                    <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                        {% if cls.year == "1st" %} 
+                        {{ cls.year }} - {{ cls.section }} 
+                        {% endif %}
+                       
+                        {% if cls.year == "2nd" %} 
+                        {{ cls.year }} - {{ cls.section }} 
+                        {% endif %}
+                        
+                        {% if cls.year == "3rd" %} 
+                        {{ cls.year }} - {{ cls.section }} 
+                        {% endif %}
+                        {% endfor %}
+
+                    </option>
+                
+            </select>
+            <select name="semester" class="classroom-select">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+            </select>
+            {% csrf_token %}
+            <button type="submit" class="submit-button">Search</button>
+        </form>
+
+        <h4>Calculate Percentage</h4>
+<form action="{% url 'all_student_percentage' %}" method="post" class="attendance-form">
+    {% csrf_token %}
+    <select name="classroom_id" class="classroom-select">
+        {% for cls in class %}
+            <option value="{{ cls.id }}" {% if cls.id == selected_class_id %} selected {% endif %}>
+                {{ cls.year }} - {{ cls.section }}
+            </option>
+        {% endfor %}
+    </select>
+    <select name="semester" class="classroom-select">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
+    <button type="submit" class="submit-button">Search</button>
+</form>
         </div>
     </div>
 
@@ -206,12 +293,15 @@
     <!-- java script -->
    <script>
     // Function to open the modal
+  
+    
     function openModal(modalId) {
-        var modal = document.getElementById(modalId);
-        if (modal) {
-            modal.style.display = 'block';
-        }
-    }
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'block';
+
+   
+}
+
 
     // Function to close the modal
     function closeModal(modalId) {
@@ -249,5 +339,16 @@ function displayDate() {
 // Call the function to display the date
 displayDate();
 </script>
+{% else %}
+ {% if pending %}
+ <div class ="pending_contianer">
+ <div class="pending">
+ <img src="{% static 'images/sent.jpg' %}" width="450px" >
+ <p>status : <span style="color: red;"> pending</span></p>
+ <p id="p" style="color: darkblue;">Your request has been forwarded to the head of the department. Please be patient, or feel free to reach out directly to them for further assistance.</p>
+</div>
+</div>
+{% endif %}
+{% endif %}
     </body>
     </html>

@@ -9,32 +9,8 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.shortcuts import render
 
-def iots(request):
-    return render(request , 'iot.html')
-def iot(request):
-    try:
-        iot_instance = Iot.objects.get(id=1)  # Assuming there's only one instance of Iot
-        distance = iot_instance.data
-    except Iot.DoesNotExist:
-        distance = "Distance data not found"
-        
-    return JsonResponse({'distance': distance})
 
-def sensor_data(request):
-    if request.method == 'GET':
-        distance = request.GET.get('distance', None)
-        if distance is not None:
-            # Process the received distance data as needed
-            print("Received distance:", distance)
-            # You can store this data in the database or do any other processing
-            
-            # Update the model instance with the received distance data
-            iot_instance, created = Iot.objects.get_or_create(id=1)  # Assuming there's only one instance of Iot
-            iot_instance.data = distance
-            iot_instance.save()
-            
-            return HttpResponse(distance)
-    return HttpResponse()
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -81,20 +57,26 @@ def index(request):
             pending_requests = Request.objects.filter(status='pending')
             pending_request_count = request.user.received_requests.filter(status='pending').count()
             return render(request, 'hod.html', {'hod': True,'class': classrooms, 'department_obj': department_obj, 'pending_request_count': pending_request_count, 'requests': pending_requests,'staff':staffs})
-        elif Request.objects.filter(sender=request.user, status='accepted').exists():
-            staff_with_accepted_request = Request.objects.filter(sender=request.user, status='accepted')
+        elif  Request.objects.filter(sender = request.user,status = 'accepted'):
+            today_date = datetime.date.today()
+            formatted_date = today_date.strftime("%Y-%m-%d")
+
+
             classrooms = None 
             leave = None
             student = None
             circular = None
+            staff_obj = None  
+            staffs = None
              # Default value
             try:
                 staff_obj = staff.objects.get(created_by=request.user)
                 if isinstance(staff_obj.department, department):  # Ensure staff_obj.department is a department instance
-                    classrooms = classroom.objects.filter(department=staff_obj.department)
+                    classrooms = classroom.objects.filter(department=staff_obj.department).order_by('year','section')
                     student = student_record.objects.filter(classroom__in = classrooms)
                     
                 leave = leave_letter.objects.filter(staff=staff_obj)
+                unseen = leave_letter.objects.filter(staff=staff_obj,seen = False)
                 circular = Circular.objects.filter(department = staff_obj.department)
                 staffs = staff.objects.filter(department=staff_obj.department)
                 
@@ -103,7 +85,11 @@ def index(request):
             except staff.DoesNotExist:
                 pass  # Handle the case when no staff object is found
             
-            return render(request, 'staff.html', {'staff':staff_obj,'staff_with_accepted_request': staff_with_accepted_request, 'class': classrooms,'leave':leave,'student':student,'circular':circular,'staffs':staffs})
+            return render(request, 'staff.html', {'date': str(formatted_date),'unseen':unseen,'staff':staff_obj, 'class': classrooms,'leave':leave,'student':student,'circular':circular,'staffs':staffs})
+        elif  Request.objects.filter(sender = request.user,status = 'pending'):
+            pending = "pending"
+            return render(request, 'staff.html',{'pending':pending})
+
         else:
             return render(request, 'index.html')
     else:
